@@ -2,4 +2,4 @@
 
 Scrabble written in C++
 
-/ for Jesse Tov's Winter Quarter 2019 EECS 211: Fundamentals of Computer Programming II class at Northwestern University /
+_for Jesse Tov's Winter Quarter 2019 EECS 211: Fundamentals of Computer Programming II class at Northwestern University_
