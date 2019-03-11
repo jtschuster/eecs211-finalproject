@@ -24,12 +24,13 @@ struct Tile {
     const char letter;
 
     // value of tile's letter
-    const int value;
-
+    const int value(char letter);
 };
 
 struct Dictionary : std::vector<std::string> {
 
+    /// Constructor
+    //Dictionary(std::string);
 private:
 
     // Length of the dictionary
@@ -37,8 +38,11 @@ private:
 
 public:
 
+
     // Checks if a string is in the dictionary
     const bool binarySearch(std::string);
+
+    std::vector <std::string> dictionary;
 };
 
 struct BlankTile : Tile {
@@ -92,6 +96,7 @@ struct Bag : std::vector<Tile> {
     void randomize();
 };
 
+
 struct Rack : std::vector<Tile> {
 
 private:
@@ -110,17 +115,23 @@ public:
     // Refill the Rack from the Bag
     void refill(Bag& bag);
 
-    // Exchanges tiles with the Bag
-    void exchange(Bag& bag);
+    // Exchanges tiles with the Bag, returns false if not enough tiles remaining
+    const bool exchange(Bag& bag, std::vector<Tile>);
 
     // Take the tile off the rack (presumably onto board)
-    void removeTile(Tile& tile);
+    Tile& removeTile(Tile& tile);
 
     // Puts a tile on the rack, returns false if no room
     const bool addTile(Tile& tile);
 
     // Given a Player identifier, get the Rack belonging to that player
     static Rack& getPlayerRack(Player p);
+
+    // Checks if the tiles on this rack are same tiles as passed rack
+    const bool operator==(Rack&);
+
+    // Checks if the tiles each rack are same tiles and same order
+    static const bool exactMatch(Rack&, Rack&);
 };
 
 
@@ -137,7 +148,7 @@ struct Board : std::vector<Space> {
     std::vector<Word> playedWords;
 
     // Return the tile at a location on the board;
-    Tile& getTileAt(int row, int col) const;
+    Space& getSpaceAt(int row, int col) const;
 
     // Gets the tiles on the board but not yet played
     std::vector<Space&> unsavedSpaces();
@@ -145,6 +156,9 @@ struct Board : std::vector<Space> {
 
 
 class Model {
+
+public:
+
     // Number of Players
     int numPlayers;
 
@@ -163,7 +177,7 @@ class Model {
     // Ends the current turn
     Player endTurn();
 
-private:
+//private: Will make private once we can access from test
     // HELPER FUNCTIONS
 
     // Checks for game over conditions
@@ -174,6 +188,7 @@ private:
 
     // Checks if a move is valid
     const bool isMoveValid() const;
+
 
     // Gets the score of a move
     int scoreMove();
