@@ -8,9 +8,6 @@
 //
 
 
-
-ge211::Dimensions const space_dims = {30, 30};
-int const space_margins = 5;
 std::string const dictionary_path;
 enum Player {
     P1,
@@ -58,6 +55,12 @@ struct Space {
         None
     };
 
+    Space(int row, int col);
+
+    Space(int row, int col, bool used, Tile &tile,
+            const Bonuses bonus, bool bonus_active);
+
+
     // Stores the position of the space
     const int row;
     const int col;
@@ -66,7 +69,7 @@ struct Space {
     bool used;
 
     // What tile is on a space, nullptr if no tile on space
-    Tile tile;
+    std::unique_ptr<Tile> tile;
 
     // What bonus the space gives
     Bonuses const bonus;
@@ -74,17 +77,27 @@ struct Space {
     // Whether the bonus is active
     bool bonus_active;
 
-    // Tries to put the passed tile
+// Tries to put the passed tile
     const bool insert_Tile(Tile&);
 
 };
 
 struct Word : std::vector<Space> {
+
     // Score with active multipliers
     int const Score;
 
-    // Checks if a word is in the dictionary
+private:
+
+
+public:
+
+    Word(const Word &Score);
+
+// Checks if a word is in the dictionary
     const bool isValid(Dictionary&) const;
+
+
 };
 
 struct Bag : std::vector<Tile> {
@@ -131,12 +144,18 @@ struct Board : std::vector<Space> {
     const int numCols;
 
     // The space in the center of the board
-    const Space& centerSpace;
+    std::unique_ptr<Space> centerSpace;
 
     // A vector of all the words that have already been played and thus points scored for
     std::vector<Word> playedWords;
 
-    // Return the tile at a location on the board;
+    Board(int numRows, int numCols,
+            Space &centerSpace,
+            std::vector<Word> &playedWords);
+
+    Board(int numRows, int numCols);
+
+// Return the tile at a location on the board;
     Tile& getTileAt(int row, int col) const;
 
     // Gets the tiles on the board but not yet played
