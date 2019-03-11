@@ -135,7 +135,8 @@ Model::Model(int numPlayers,
              : board_(num_of_rows, num_of_cols),
              numPlayers(numPlayers),
              Scores(Scores),
-             currentPlayer(currentPlayer) {}
+             currentPlayer(currentPlayer)
+             {bag.randomize();}
 
 
 const bool Model::placeTile(std::shared_ptr<Tile> tile, int row, int col) {
@@ -146,5 +147,7 @@ const bool Model::placeTile(std::shared_ptr<Tile> tile, int row, int col) {
 
 
 void Bag::randomize() {
-    start[]
+    Bag bag;
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::shuffle(bag.begin(), bag.end(), std::default_random_engine(seed));
 }
