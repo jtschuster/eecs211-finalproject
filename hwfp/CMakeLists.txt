@@ -5,6 +5,13 @@ include(.eecs211/cmake/CMakeLists.txt)
 set(MODEL_SRC
         src/model.cpp)
 
+add_program(words
+        src/words.cpp
+        src/controller.cpp
+        src/view.cpp
+        ${MODEL_SRC})
+target_link_libraries(words ge211)
+
 add_program(main
     src/main.cpp
     ${MODEL_SRC})
