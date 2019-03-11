@@ -62,7 +62,7 @@ int Tile::getValue() {
 
 Tile::Tile(const char letter) : letter(letter) {}
 
-int Word::sumScore() {
+void Word::sumScore() {
     for(Space& s : *this){
         this->Score += s.tile->getValue();
     }
@@ -79,7 +79,7 @@ Space::Space(Space& s) :
                 s.row,
                 s.col,
                 s.used,
-                std::unique_ptr<Tile>(s.tile.release()),
+                std::shared_ptr<Tile>(s.tile),
                 s.bonus,
                 s.bonus_active
         }
@@ -88,30 +88,60 @@ Space::Space(Space& s) :
 Space::Space(const int row,
              const int col,
              bool used,
-             std::unique_ptr<Tile> tile,
+             std::shared_ptr<Tile> tile,
              const Space::Bonuses bonus,
              bool bonus_active)
         : row(row),
         col(col),
         used(used),
-        tile(tile.release()),
+        tile(tile),
         bonus(bonus),
         bonus_active(bonus_active) {}
 
-
-
+const bool Space::insert_Tile(std::shared_ptr<Tile> t) {
+    this->tile = t;
+    return true;
+}
 
 
 Board::Board(const int numRows,
-             const int numCols,
-             Space &centerSpace,
-             std::vector<Word> &playedWords)
+             const int numCols)
         : numRows(numRows),
         numCols(numCols),
         centerSpace(std::make_unique<Space>(numRows/2, numCols/2)),
-        playedWords(playedWords = std::vector<Word>{})
-        {  }
+        playedWords(std::vector<Word>{})
+        {
+            for(int r = 0; r < numRows; r++) {
+                for(int c = 0; c < numCols; c++) {
+                    if(r != numRows/2 || c != numCols/2)
+                        this->push_back(std::make_unique<Space>(r,c));
+                    else
+                        this->push_back(std::unique_ptr<Space>(this->centerSpace.get()));
+                }
+            }
+        }
+
+std::shared_ptr<Space> Board::getSpaceAt(int row, int col) const {
+    for(std::shared_ptr<Space> s : *this)
+        if(s->row == row && s->col == col)
+            return s;
+
+}
 
 
+Model::Model(int numPlayers,
+             const std::unordered_map<Player, int> &Scores,
+             Player currentPlayer)
+             : board_(num_of_rows, num_of_cols),
+             numPlayers(numPlayers),
+             Scores(Scores),
+             currentPlayer(currentPlayer) {}
+
+
+const bool Model::placeTile(std::shared_ptr<Tile> tile, int row, int col) {
+    std::shared_ptr<Space> spot = board_.getSpaceAt(row, col);
+    spot->insert_Tile(tile);
+    return true;
+}
 
 

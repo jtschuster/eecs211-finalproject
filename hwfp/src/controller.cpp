@@ -5,7 +5,7 @@ using namespace ge211;
 
 
 Controller::Controller()
-        : model_()
+        : model_(2)
         , view_(model_)
         , m_pos_(0,0)
 { }
@@ -23,6 +23,11 @@ Dimensions Controller::initial_window_dimensions() const
 std::string Controller::initial_window_title() const
 {
     return view_.initial_window_title();
+}
+
+void Controller::on_key_down(ge211::Key key) {
+    if(key.code() == 'r')
+        model_.placeTile(std::make_shared<Tile>('r'), 8, 2);
 }
 
 // TODO: Add or remove if necessary

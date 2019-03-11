@@ -26,6 +26,8 @@ protected:
     ge211::Dimensions initial_window_dimensions() const override;
     std::string initial_window_title() const override;
 
+    void on_key_down(ge211::Key) override;
+
 private:
     Model            model_;
     View             view_;

@@ -2,6 +2,7 @@
 
 #include <ge211.h>
 #include <map>
+#include <unordered_map>
 
 //
 // Constants:
@@ -68,7 +69,7 @@ struct Space {
     Space(int row,
             int col,
             bool used = false,
-            std::unique_ptr<Tile> tile = std::make_unique<Tile>(0),
+            std::shared_ptr<Tile> tile = std::shared_ptr<Tile>(),
             Bonuses bonus = Bonuses::None,
             bool bonus_active = false);
 
@@ -83,7 +84,7 @@ struct Space {
     bool used;
 
     // What tile is on a space, nullptr if no tile on space
-    std::unique_ptr<Tile> tile;
+    std::shared_ptr<Tile> tile;
 
     // What bonus the space gives
     Bonuses const bonus;
@@ -92,7 +93,7 @@ struct Space {
     bool bonus_active;
 
 // Tries to put the passed tile
-    const bool insert_Tile(Tile&);
+    const bool insert_Tile(std::shared_ptr<Tile>);
 
 };
 
@@ -102,7 +103,7 @@ struct Word : std::vector<Space> {
     int Score;
 
 private:
-    int sumScore();
+    void sumScore();
 
 public:
 
@@ -162,7 +163,7 @@ public:
 
 
 
-struct Board : std::vector<Space> {
+struct Board : std::vector<std::shared_ptr<Space>> {
     // Number of rows and columns in a board
     const int numRows;
     const int numCols;
@@ -173,14 +174,10 @@ struct Board : std::vector<Space> {
     // A vector of all the words that have already been played and thus points scored for
     std::vector<Word> playedWords;
 
-    Board(int numRows, int numCols,
-            Space &centerSpace,
-            std::vector<Word> &playedWords);
-
-    //Board(int numRows, int numCols);
+    Board(int numRows, int numCols);
 
     // Return the space at a location on the board;
-    Space& getSpaceAt(int row, int col) const;
+    std::shared_ptr<Space> getSpaceAt(int row, int col) const;
 
     // Return the tile at a location on the board;
     Tile& getTileAt(int row, int col) const;
@@ -192,19 +189,27 @@ struct Board : std::vector<Space> {
 
 class Model {
 
+    friend class View;
+
+    Board board_;
+
 public:
 
     // Number of Players
     int numPlayers;
 
     // Stores each player's score
-    std::map<Player, int> Scores;
+    std::unordered_map<Player, int> Scores;
 
     // Whose turn it is
     Player currentPlayer;
 
-    // Places a tile on the board
-    const bool placeTile(Tile&);
+    Model(int numPlayers,
+            const std::unordered_map<Player, int> &Scores = std::unordered_map<Player, int>(),
+            Player currentPlayer = Player::P1);
+
+// Places a tile on the board
+    const bool placeTile(std::shared_ptr<Tile>, int row, int col);
 
     // Sets up the players racks and the game
     void initialize(int numPlayers);

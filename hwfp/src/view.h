@@ -25,4 +25,12 @@ private:
 
     ge211::Rectangle_sprite background;
 
+    ge211::Rectangle_sprite plain_tile {{tile_side_length_,tile_side_length_}, {234, 219, 179}};
+    ge211::Rectangle_sprite center_tile {{tile_side_length_,tile_side_length_}, {255, 0, 0, 255}};
+
+    ge211::Text_sprite r {std::string(1,'R'), {"sans.ttf", 16}};
+
+    ge211::Position board_loc_to_pos(int row, int col);
+
 };
+
