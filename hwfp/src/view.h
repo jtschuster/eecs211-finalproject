@@ -20,15 +20,30 @@ public:
 private:
     Model const& model_;
 
-    const int tile_side_length_ = 35;
+    const int space_side_length_ = 35;
+    const int tile_side_length_ = space_side_length_ - 2;
+
     const int margin_ = 2;
+    const ge211::Dimensions letter_offset_ = {4, -2};
+    const ge211::Dimensions point_offset_ = {19, 18};
+    const ge211::Dimensions space_dims_ = {space_side_length_,space_side_length_};
 
     ge211::Rectangle_sprite background;
 
-    ge211::Rectangle_sprite plain_tile {{tile_side_length_,tile_side_length_}, {234, 219, 179}};
-    ge211::Rectangle_sprite center_tile {{tile_side_length_,tile_side_length_}, {255, 0, 0, 255}};
+    ge211::Rectangle_sprite plain_space {space_dims_, {234, 219, 179}};
+    ge211::Rectangle_sprite dw_space {space_dims_, {246, 179, 176}};
+    ge211::Rectangle_sprite tw_space {space_dims_, {232, 58, 48}};
+    ge211::Rectangle_sprite dl_space {space_dims_, {183, 212, 240}};
+    ge211::Rectangle_sprite tl_space {space_dims_, {43, 130, 212}};
 
-    ge211::Text_sprite r {std::string(1,'R'), {"sans.ttf", 16}};
+
+    ge211::Image_sprite center_star {"star.png"};
+    ge211::Rectangle_sprite tile_sprite {{tile_side_length_, tile_side_length_}, {255, 255, 240, 255}};
+
+    std::unordered_map<char, ge211::Text_sprite> letters;
+    std::unordered_map<char, ge211::Text_sprite> points;
+    ge211::Font tile_font {"RobotoMono-Regular.ttf", 26};
+    ge211::Font point_font {"RobotoMono-Regular.ttf", 12};
 
     ge211::Position board_loc_to_pos(int row, int col);
 

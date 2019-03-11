@@ -26,8 +26,35 @@ std::string Controller::initial_window_title() const
 }
 
 void Controller::on_key_down(ge211::Key key) {
-    if(key.code() == 'r')
-        model_.placeTile(std::make_shared<Tile>('r'), 8, 2);
+    /*switch (key.code()){
+        case 'r':
+            model_.placeTile(std::make_shared<Tile>('R'), 8, 2);
+            break;
+        case 'q':
+            model_.placeTile(std::make_shared<Tile>('Q'), 11, 4);
+            break;
+        case 'a':
+            model_.placeTile(std::make_shared<Tile>('A'), 0, 5);
+            break;
+        case 'p':
+            model_.placeTile(std::make_shared<Tile>('P'), 2, 3);
+            break;
+        case 'm':
+            model_.placeTile(std::make_shared<Tile>('M'), 2, 2);
+            break;
+        case 'w':
+            model_.placeTile(std::make_shared<Tile>('W'), 10, 14);
+            break;
+        case 'o':
+            model_.placeTile(std::make_shared<Tile>('O'), 5, 8);
+            break;
+        case 'b':
+            model_.placeTile(std::make_shared<Tile>('B'), 7, 7);
+            break;
+    }*/
+    if(key.code() <= 'z' && key.code() >= 'a')
+        model_.placeTile(std::make_shared<Tile>(key.code() - 32), 10, 9);
+
 }
 
 // TODO: Add or remove if necessary
