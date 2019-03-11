@@ -52,9 +52,4 @@ const int value(char letter) {
 
     return Value[letter];
 }
-void Bag::randomize() {
-    vector<Tile> Rack;
-    for (size_t i = 0; i < 7; ++i) {
-        Rack[i] = rand() % 7
-    }
-}
+
