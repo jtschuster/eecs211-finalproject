@@ -24,7 +24,7 @@ const bool Dictionary::binarySearch(std::string) {
 
 }
 
-const int value(char letter) {
+int Tile::value(char letter) {
     std::map <char, int> Value;
     Value.insert(std::pair<char, int>('A', 1));
     Value.insert(std::pair<char, int>('B', 3));
@@ -55,43 +55,52 @@ const int value(char letter) {
 
     return Value[letter];
 }
-Word::Word(): Score(0)
-{
-    for(Space s : Word)
-        Score += s.tile->value;
+
+int Tile::getValue() {
+    return Tile::value(this->letter);
 }
 
+Tile::Tile(const char letter) : letter(letter) {}
+
+int Word::sumScore() {
+    for(Space& s : *this){
+        this->Score += s.tile->getValue();
+    }
+}
+
+
+Word::Word()
+: Score(0)
+{ sumScore();}
+
+
+Space::Space(Space& s) :
+        Space {
+                s.row,
+                s.col,
+                s.used,
+                std::unique_ptr<Tile>(s.tile.release()),
+                s.bonus,
+                s.bonus_active
+        }
+{ }
 
 Space::Space(const int row,
              const int col,
              bool used,
-             Tile &tile,
+             std::unique_ptr<Tile> tile,
              const Space::Bonuses bonus,
              bool bonus_active)
         : row(row),
         col(col),
         used(used),
-        tile(std::unique_ptr<Tile>(&tile)),
+        tile(tile.release()),
         bonus(bonus),
         bonus_active(bonus_active) {}
 
-Space::Space(const int row, const int col)
-        : row(row),
-        col(col),
-        used(false),
-        tile(nullptr),
-        bonus(Space::Bonuses::None),
-        bonus_active(false)
-        {   }
 
 
-Board::Board(const int numRows,
-             const int numCols)
-        : numRows(numRows),
-        numCols(numCols),
-        centerSpace(std::make_unique<Space>(numRows/2, numCols/2)),
-        playedWords(std::vector<Word>)
-{  }
+
 
 Board::Board(const int numRows,
              const int numCols,
@@ -99,8 +108,8 @@ Board::Board(const int numRows,
              std::vector<Word> &playedWords)
         : numRows(numRows),
         numCols(numCols),
-        centerSpace(std::unique_ptr<Space>(&centerSpace)),
-        playedWords(playedWords)
+        centerSpace(std::make_unique<Space>(numRows/2, numCols/2)),
+        playedWords(playedWords = std::vector<Word>{})
         {  }
 
 

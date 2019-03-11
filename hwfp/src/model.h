@@ -20,8 +20,14 @@ struct Tile {
     // letter on a tile
     const char letter;
 
-    // value of tile's letter
-    const int value(char letter);
+    Tile(char letter);
+
+// value of tile's letter
+    static int value(char letter);
+
+    int getValue();
+
+
 };
 
 struct Dictionary : std::vector<std::string> {
@@ -59,11 +65,15 @@ struct Space {
         None
     };
 
-    Space(int row, int col);
+    Space(int row,
+            int col,
+            bool used = false,
+            std::unique_ptr<Tile> tile = std::make_unique<Tile>(0),
+            Bonuses bonus = Bonuses::None,
+            bool bonus_active = false);
 
-    Space(int row, int col, bool used, Tile &tile,
-            const Bonuses bonus, bool bonus_active);
 
+    Space(Space&);
 
     // Stores the position of the space
     const int row;
@@ -89,14 +99,17 @@ struct Space {
 struct Word : std::vector<Space> {
 
     // Score with active multipliers
-    int const Score;
+    int Score;
 
 private:
-
+    int sumScore();
 
 public:
 
-    Word(const Word &Score);
+    Word();
+
+    Word& operator=(const Word&) = delete;
+
 
 // Checks if a word is in the dictionary
     const bool isValid(Dictionary&) const;
@@ -160,13 +173,14 @@ struct Board : std::vector<Space> {
     // A vector of all the words that have already been played and thus points scored for
     std::vector<Word> playedWords;
 
-    // Return the space at a location on the board;
-    Space& getSpaceAt(int row, int col) const;
     Board(int numRows, int numCols,
             Space &centerSpace,
             std::vector<Word> &playedWords);
 
-    Board(int numRows, int numCols);
+    //Board(int numRows, int numCols);
+
+    // Return the space at a location on the board;
+    Space& getSpaceAt(int row, int col) const;
 
     // Return the tile at a location on the board;
     Tile& getTileAt(int row, int col) const;
