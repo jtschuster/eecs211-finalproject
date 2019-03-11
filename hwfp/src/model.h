@@ -119,6 +119,38 @@ public:
 };
 
 struct Bag : std::vector<Tile> {
+
+    Bag() {
+        std::map<char, int> start;
+        start.insert(std::pair<char, int>('A', 9));
+        start.insert(std::pair<char, int>('B', 2));
+        start.insert(std::pair<char, int>('C', 2));
+        start.insert(std::pair<char, int>('D', 4));
+        start.insert(std::pair<char, int>('E', 12));
+        start.insert(std::pair<char, int>('F', 2));
+        start.insert(std::pair<char, int>('G', 3));
+        start.insert(std::pair<char, int>('H', 2));
+        start.insert(std::pair<char, int>('I', 9));
+        start.insert(std::pair<char, int>('J', 1));
+        start.insert(std::pair<char, int>('K', 1));
+        start.insert(std::pair<char, int>('L', 4));
+        start.insert(std::pair<char, int>('M', 2));
+        start.insert(std::pair<char, int>('N', 6));
+        start.insert(std::pair<char, int>('O', 8));
+        start.insert(std::pair<char, int>('P', 2));
+        start.insert(std::pair<char, int>('Q', 1));
+        start.insert(std::pair<char, int>('R', 6));
+        start.insert(std::pair<char, int>('S', 4));
+        start.insert(std::pair<char, int>('T', 6));
+        start.insert(std::pair<char, int>('U', 4));
+        start.insert(std::pair<char, int>('V', 2));
+        start.insert(std::pair<char, int>('W', 2));
+        start.insert(std::pair<char, int>('X', 1));
+        start.insert(std::pair<char, int>('Y', 2));
+        start.insert(std::pair<char, int>('Z', 1));
+    }
+
+
     // Shuffles the bag around
     void randomize();
 };

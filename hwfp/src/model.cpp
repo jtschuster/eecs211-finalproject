@@ -145,3 +145,6 @@ const bool Model::placeTile(std::shared_ptr<Tile> tile, int row, int col) {
 }
 
 
+void Bag::randomize() {
+    start[]
+}
