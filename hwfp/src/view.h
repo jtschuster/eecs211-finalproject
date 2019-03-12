@@ -30,6 +30,11 @@ private:
 
     ge211::Rectangle_sprite background;
 
+    const ge211::Dimensions rack_dims_ = {margin_ + (tile_side_length_ + margin_) * 7,
+                                          2 * margin_ + tile_side_length_};
+    const ge211::Dimensions rack_offset_;
+    ge211::Rectangle_sprite rack;
+
     ge211::Rectangle_sprite plain_space {space_dims_, {234, 219, 179}};
     ge211::Rectangle_sprite dw_space {space_dims_, {246, 179, 176}};
     ge211::Rectangle_sprite tw_space {space_dims_, {232, 58, 48}};
@@ -46,6 +51,8 @@ private:
     ge211::Font point_font {"RobotoMono-Regular.ttf", 12};
 
     ge211::Position board_loc_to_pos(int row, int col);
+
+    ge211::Position rack_loc_to_pos(int ind);
 
 };
 

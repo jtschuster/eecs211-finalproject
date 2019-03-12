@@ -125,9 +125,10 @@ const bool Space::insert_Tile(std::shared_ptr<Tile> t) {
     return true;
 }
 
-Space::Bonuses get_bonus(std::shared_ptr<Space> const sp) {
-    return sp->bonus;
+Space::Bonuses Space::get_bonus(std::shared_ptr<Space> s) const {
+    return s->bonus;
 }
+
 
 
 Board::Board(const int numRows,
@@ -168,7 +169,10 @@ Model::Model(int numPlayers,
              numPlayers(numPlayers),
              Scores(Scores),
              currentPlayer(currentPlayer)
-             {/*bag.randomize();*/}
+             {
+                 racks_[Player::P1] = std::make_shared<Rack>(Rack(Player::P1));
+                 /*bag.randomize();*/
+             }
 
 
 const bool Model::placeTile(std::shared_ptr<Tile> tile, int row, int col) {
@@ -183,3 +187,27 @@ const bool Model::placeTile(std::shared_ptr<Tile> tile, int row, int col) {
 //    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 //    std::shuffle(bag.begin(), bag.end(), std::default_random_engine(seed));
 //}
+
+const bool Rack::addTile(std::shared_ptr<Tile> tile) {
+    if(this->size() == 7) return false;
+
+    this->push_back(tile);
+    return true;
+}
+
+const bool Rack::addTile(std::shared_ptr<Tile> &tile) {
+    if(this->size() == 7) return false;
+
+    return addTile(std::shared_ptr<Tile>(tile));
+}
+
+Rack::Rack(const Player player)
+    : player(player) {
+        this->addTile(std::make_shared<Tile>('P'));
+        this->addTile(std::make_shared<Tile>('T'));
+        this->addTile(std::make_shared<Tile>('W'));
+        this->addTile(std::make_shared<Tile>('O'));
+        this->addTile(std::make_shared<Tile>('E'));
+        this->addTile(std::make_shared<Tile>('C'));
+        this->addTile(std::make_shared<Tile>('Z'));
+    }

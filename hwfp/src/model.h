@@ -100,7 +100,7 @@ struct Space {
 private:
 
     // Returns the bonus for a space
-    Space::Bonuses get_bonus(std::shared_ptr<Space> const) const;
+    Space::Bonuses get_bonus(std::shared_ptr<Space>) const;
 
     std::vector<ge211::Position> double_word =
             { {1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}, {7, 7}, {10, 10},
@@ -158,14 +158,18 @@ struct Bag : std::vector<Tile> {
 };
 
 
-struct Rack : std::vector<Tile> {
+struct Rack : std::vector<std::shared_ptr<Tile>> {
+
+    friend class View;
 
 private:
 
     // Most number of tiles allowed on a Rack
-    int max_size_ = 7;
+     const int max_size_ = 7;
 
 public:
+
+    Rack(const Player player);
 
     // The owner of the rack
     const Player player;
@@ -180,10 +184,13 @@ public:
     const bool exchange(Bag& bag, std::vector<Tile>);
 
     // Take the tile off the rack (presumably onto board)
-    Tile& removeTile(Tile& tile);
+    Tile& removeTile(std::shared_ptr<Tile> tile);
 
     // Puts a tile on the rack, returns false if no room
-    const bool addTile(Tile& tile);
+    const bool addTile(std::shared_ptr<Tile> tile);
+
+    const bool addTile(std::shared_ptr<Tile>& tile);
+
 
     // Given a Player identifier, get the Rack belonging to that player
     static Rack& getPlayerRack(Player p);
@@ -227,6 +234,8 @@ class Model {
     friend class View;
 
     Board board_;
+
+    std::unordered_map<Player, std::shared_ptr<Rack>> racks_;
 
 public:
 
