@@ -17,6 +17,9 @@ enum Player {
     P4
 };
 
+template <class T>
+bool vector_contains(std::vector<T>, T);
+
 struct Tile {
     // letter on a tile
     const char letter;
@@ -70,7 +73,6 @@ struct Space {
             int col,
             bool used = false,
             std::shared_ptr<Tile> tile = std::shared_ptr<Tile>(),
-            Bonuses bonus = Bonuses::None,
             bool bonus_active = false);
 
 
@@ -87,13 +89,40 @@ struct Space {
     std::shared_ptr<Tile> tile;
 
     // What bonus the space gives
-    Bonuses const bonus;
+    Bonuses bonus;
 
     // Whether the bonus is active
     bool bonus_active;
 
-// Tries to put the passed tile
+    // Tries to put the passed tile
     const bool insert_Tile(std::shared_ptr<Tile>);
+
+private:
+
+    // Returns the bonus for a space
+    Space::Bonuses get_bonus(std::shared_ptr<Space> const) const;
+
+    std::vector<ge211::Position> double_word =
+            { {1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}, {7, 7}, {10, 10},
+              {11, 11}, {12, 12}, {13, 13}, {13, 1}, {12, 2}, {11, 3},
+              {10, 4}, {4, 10}, {3, 11}, {2, 12}, {1, 13}
+            };
+    std::vector<ge211::Position> double_letter =
+            { {0, 3}, {0, 11}, {2, 6}, {2, 8}, {3, 0}, {3, 7}, {3, 14},
+              {6, 2}, {6, 6}, {6, 8}, {6, 12}, {7, 3}, {7, 11}, {8, 2},
+              {8, 6}, {8, 8}, {8, 12}, {11, 0}, {11, 7}, {11, 14},
+              {12, 6}, {12, 8}, {14, 3}, {14, 11}
+            };
+    std::vector<ge211::Position> triple_word = {
+            { {0, 0}, {0, 7}, {0, 14}, {7, 0}, {7, 14}, {14, 0},
+              {14, 7}, {14, 14}
+            }
+    };
+    std::vector<ge211::Position> triple_letter = {
+            { {1, 5}, {1, 9}, {5, 1}, {5, 5}, {5, 9}, {5, 13}, {9, 1},
+              {9, 5}, {9, 9}, {9, 13}, {13, 5}, {13, 9}
+            }
+    };
 
 };
 
@@ -120,7 +149,7 @@ public:
 
 struct Bag : std::vector<Tile> {
 
-    Bag() {
+    //Bag() {
 
 
 
@@ -174,7 +203,7 @@ struct Board : std::vector<std::shared_ptr<Space>> {
     const int numCols;
 
     // The space in the center of the board
-    std::unique_ptr<Space> centerSpace;
+    std::shared_ptr<Space> centerSpace;
 
     // A vector of all the words that have already been played and thus points scored for
     std::vector<Word> playedWords;
@@ -185,10 +214,11 @@ struct Board : std::vector<std::shared_ptr<Space>> {
     std::shared_ptr<Space> getSpaceAt(int row, int col) const;
 
     // Return the tile at a location on the board;
-    Tile& getTileAt(int row, int col) const;
+    std::shared_ptr<Tile> getTileAt(int row, int col) const;
 
     // Gets the tiles on the board but not yet played
     std::vector<Space&> unsavedSpaces();
+
 };
 
 

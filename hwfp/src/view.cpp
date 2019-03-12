@@ -33,7 +33,16 @@ void View::draw(ge211::Sprite_set &set) {
 
     for(const std::shared_ptr<Space>& sp : model_.board_) {
         ge211::Position space_pos = board_loc_to_pos(sp->row, sp->col);
-        set.add_sprite(plain_space, space_pos, 0);
+        if(sp->bonus == Space::Bonuses::DoubleWord)
+            set.add_sprite(dw_space, space_pos, 0);
+        else if (sp->bonus == Space::Bonuses::DoubleLetter)
+            set.add_sprite(dl_space, space_pos, 0);
+        else if (sp->bonus == Space::Bonuses::TripleWord)
+            set.add_sprite(tw_space, space_pos, 0);
+        else if (sp->bonus == Space::Bonuses::TripleLetter)
+            set.add_sprite(tl_space, space_pos, 0);
+        else
+            set.add_sprite(plain_space, space_pos, 0);
         if(sp->tile != nullptr){
             const char sp_let = sp->tile->letter;
             set.add_sprite(tile_sprite, space_pos.down_right_by({1, 1}),9);

@@ -52,8 +52,16 @@ void Controller::on_key_down(ge211::Key key) {
             model_.placeTile(std::make_shared<Tile>('B'), 7, 7);
             break;
     }*/
-    if(key.code() <= 'z' && key.code() >= 'a')
-        model_.placeTile(std::make_shared<Tile>(key.code() - 32), 10, 9);
+    if(key.code() <= 'd' && key.code() >= 'a')
+        model_.placeTile(std::make_shared<Tile>(key.code() - 32), 3, 3);
+    if(key.code() <= 'h' && key.code() >= 'e')
+        model_.placeTile(std::make_shared<Tile>(key.code() - 32), 8, 12);
+    if(key.code() <= 'm' && key.code() >= 'i')
+        model_.placeTile(std::make_shared<Tile>(key.code() - 32), 7, 0);
+    if(key.code() <= 's' && key.code() >= 'n')
+        model_.placeTile(std::make_shared<Tile>(key.code() - 32), 5, 9);
+    if(key.code() <= 'z' && key.code() >= 't')
+        model_.placeTile(std::make_shared<Tile>(key.code() - 32), 7, 7);
 
 }
 

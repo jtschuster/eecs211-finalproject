@@ -7,6 +7,15 @@
 const int num_of_rows = 15;
 const int num_of_cols = 15;
 
+template<class T>
+bool vector_contains(std::vector<T> vec, T val) {
+    for(T t : vec) {
+        if (t == val)
+            return true;
+
+    }
+    return false;
+}
 
 const bool Dictionary::binarySearch(std::string) {
 
@@ -75,32 +84,49 @@ Word::Word()
 
 
 Space::Space(Space& s) :
-        Space {
+        Space(
                 s.row,
                 s.col,
                 s.used,
                 std::shared_ptr<Tile>(s.tile),
-                s.bonus,
                 s.bonus_active
-        }
+                )
 { }
 
 Space::Space(const int row,
              const int col,
              bool used,
              std::shared_ptr<Tile> tile,
-             const Space::Bonuses bonus,
              bool bonus_active)
         : row(row),
         col(col),
         used(used),
+        bonus(Bonuses::None),
         tile(tile),
-        bonus(bonus),
-        bonus_active(bonus_active) {}
+        bonus_active(bonus_active)
+{
+   //Double Word
+   if(vector_contains(double_word, {row, col}))
+       bonus = Bonuses::DoubleWord;
+   //Double Letter
+   if(vector_contains(double_letter, {row, col}))
+       bonus = Bonuses::DoubleLetter;
+   //Triple Word
+   if(vector_contains(triple_word, {row, col}))
+       bonus = Bonuses::TripleWord;
+   //Triple Letter
+   if(vector_contains(triple_letter, {row, col}))
+       bonus = Bonuses::TripleLetter;
+
+}
 
 const bool Space::insert_Tile(std::shared_ptr<Tile> t) {
     this->tile = t;
     return true;
+}
+
+Space::Bonuses get_bonus(std::shared_ptr<Space> const sp) {
+    return sp->bonus;
 }
 
 
@@ -108,17 +134,18 @@ Board::Board(const int numRows,
              const int numCols)
         : numRows(numRows),
         numCols(numCols),
-        centerSpace(std::make_unique<Space>(numRows/2, numCols/2)),
+        centerSpace(std::make_shared<Space>(numRows/2, numCols/2)),
         playedWords(std::vector<Word>{})
         {
             for(int r = 0; r < numRows; r++) {
                 for(int c = 0; c < numCols; c++) {
                     if(r != numRows/2 || c != numCols/2)
-                        this->push_back(std::make_unique<Space>(r,c));
+                        this->push_back(std::make_shared<Space>(r,c));
                     else
-                        this->push_back(std::unique_ptr<Space>(this->centerSpace.get()));
+                        this->push_back(std::shared_ptr<Space>(this->centerSpace.get()));
                 }
             }
+
         }
 
 std::shared_ptr<Space> Board::getSpaceAt(int row, int col) const {
@@ -126,6 +153,11 @@ std::shared_ptr<Space> Board::getSpaceAt(int row, int col) const {
         if(s->row == row && s->col == col)
             return s;
 
+    return nullptr;
+}
+
+std::shared_ptr<Tile> Board::getTileAt(int row, int col) const {
+    return getSpaceAt(row,col)->tile;
 }
 
 
@@ -136,7 +168,7 @@ Model::Model(int numPlayers,
              numPlayers(numPlayers),
              Scores(Scores),
              currentPlayer(currentPlayer)
-             {bag.randomize();}
+             {/*bag.randomize();*/}
 
 
 const bool Model::placeTile(std::shared_ptr<Tile> tile, int row, int col) {
@@ -146,8 +178,8 @@ const bool Model::placeTile(std::shared_ptr<Tile> tile, int row, int col) {
 }
 
 
-void Bag::randomize() {
-    Bag bag;
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::shuffle(bag.begin(), bag.end(), std::default_random_engine(seed));
-}
+//void Bag::randomize() {
+//    Bag bag;
+//    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+//    std::shuffle(bag.begin(), bag.end(), std::default_random_engine(seed));
+//}
