@@ -19,7 +19,6 @@ protected:
     //const ge211::Position mouse_to_board(ge211::Position);
 
     //void on_mouse_move(ge211::Position) override;
-    //void on_mouse_down(ge211::Mouse_button, ge211::Position) override;
 
     // These three delegate to the view:
     void draw(ge211::Sprite_set&) override;
@@ -27,6 +26,11 @@ protected:
     std::string initial_window_title() const override;
 
     void on_key_down(ge211::Key) override;
+
+    int selected_tile;
+    void on_mouse_down(ge211::Mouse_button, ge211::Position) override;
+    const int mouse_to_rack(ge211::Position);
+    const ge211::Position mouse_to_board(ge211::Position);
 
 private:
     Model            model_;

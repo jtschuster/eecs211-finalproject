@@ -5,8 +5,11 @@
 
 class View
 {
+
+    friend class Controller;
+
 public:
-    explicit View(Model const&);
+    explicit View(Model&);
 
     // You will probably want to add arguments here so that the
     // controller can communicate UI state (such as a mouse or
@@ -17,8 +20,11 @@ public:
 
     std::string initial_window_title() const;
 
+    void select_tile(int);
+    void move_tile(ge211::Position);
+
 private:
-    Model const& model_;
+    Model& model_;
 
     const int space_side_length_ = 35;
     const int tile_side_length_ = space_side_length_ - 2;
@@ -34,6 +40,7 @@ private:
                                           2 * margin_ + tile_side_length_};
     const ge211::Dimensions rack_offset_;
     ge211::Rectangle_sprite rack;
+    int selected_tile_loc;
 
     ge211::Rectangle_sprite plain_space {space_dims_, {234, 219, 179}};
     ge211::Rectangle_sprite dw_space {space_dims_, {246, 179, 176}};
@@ -43,7 +50,8 @@ private:
 
 
     ge211::Image_sprite center_star {"star.png"};
-    ge211::Rectangle_sprite tile_sprite {{tile_side_length_, tile_side_length_}, {255, 255, 240, 255}};
+    ge211::Rectangle_sprite tile_sprite {{tile_side_length_, tile_side_length_}, {255, 255, 240}};
+    ge211::Rectangle_sprite highlight {{tile_side_length_ + 2, tile_side_length_ + 2}, {255, 198, 26}};
 
     std::unordered_map<char, ge211::Text_sprite> letters;
     std::unordered_map<char, ge211::Text_sprite> points;
