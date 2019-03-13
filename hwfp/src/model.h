@@ -20,17 +20,31 @@ enum Player {
 template <class T>
 bool vector_contains(std::vector<T>, T);
 
+
+
+
 struct Tile {
     // letter on a tile
     const char letter;
 
-    Tile(char letter);
+    const int t_value;
+
+    explicit Tile(char letter, int val = -1);
+
 
 // value of tile's letter
     static int value(char letter);
 
     int getValue();
 
+
+};
+
+struct BlankTile : Tile {
+
+    BlankTile();
+
+    char picked_letter;
 
 };
 
@@ -52,11 +66,6 @@ public:
     std::vector <std::string> dictionary;
 };
 
-struct BlankTile : Tile {
-
-    char letter;
-    const int value = 0;
-};
 
 struct Space {
 
@@ -147,17 +156,19 @@ public:
 
 };
 
-struct Bag : std::vector<Tile> {
+struct Bag : std::vector<std::shared_ptr<Tile>> {
 
     Bag();
-
-
 
     // Shuffles the bag around
     void randomize();
 
-    // swap 2 tiles
-    void swap(Tile t1, Tile t2);
+    std::shared_ptr<Tile> removeTile();
+
+private:
+
+    std::map<char, int> let_quants;
+
 };
 
 
@@ -187,12 +198,10 @@ public:
     const bool exchange(Bag& bag, std::vector<Tile>);
 
     // Take the tile off the rack (presumably onto board)
-    Tile& removeTile(std::shared_ptr<Tile> tile);
+    std::shared_ptr<Tile> removeTile(int loc);
 
     // Puts a tile on the rack, returns false if no room
     const bool addTile(std::shared_ptr<Tile> tile);
-
-    const bool addTile(std::shared_ptr<Tile>& tile);
 
 
     // Given a Player identifier, get the Rack belonging to that player
@@ -254,7 +263,7 @@ public:
     //Bag
     Bag bag;
 
-    Model(int numPlayers,
+    explicit Model(int numPlayers,
             const std::unordered_map<Player, int> &Scores = std::unordered_map<Player, int>(),
             Player currentPlayer = Player::P1);
 
