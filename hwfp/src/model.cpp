@@ -17,9 +17,8 @@ bool vector_contains(std::vector<T> vec, T val) {
     return false;
 }
 
-const bool Dictionary::binarySearch(std::string) {
+const bool Dictionary::binarySearch(std::string word) {
 
-    std::string word;
     std::ifstream file("words.txt");
     if (file.is_open()) {
         std::vector <std::string> dictionary;
