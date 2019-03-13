@@ -180,13 +180,18 @@ const bool Model::placeTile(std::shared_ptr<Tile> tile, int row, int col) {
     spot->insert_Tile(tile);
     return true;
 }
+void swap(Tile t1, Tile t2) {
+    char tletter = t1.letter;
+    t1.letter = t2.letter;
+    t2.letter = tletter;
 
+}
 
-//void Bag::randomize() {
-//    Bag bag;
-//    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-//    std::shuffle(bag.begin(), bag.end(), std::default_random_engine(seed));
-//}
+void Bag::randomize() {
+    Bag bag;
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::shuffle(bag.begin(), bag.end(), std::default_random_engine(seed));
+}
 
 const bool Rack::addTile(std::shared_ptr<Tile> tile) {
     if(this->size() == 7) return false;

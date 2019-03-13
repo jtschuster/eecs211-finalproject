@@ -149,12 +149,15 @@ public:
 
 struct Bag : std::vector<Tile> {
 
-    //Bag() {
+    Bag();
 
 
 
     // Shuffles the bag around
     void randomize();
+
+    // swap 2 tiles
+    void swap(Tile t1, Tile t2);
 };
 
 
