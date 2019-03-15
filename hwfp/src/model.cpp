@@ -219,7 +219,8 @@ void Bag::randomize() {
 
 std::shared_ptr<Tile> Bag::removeTile() {
     if(empty()) return nullptr;
-    return back();
+    std::shared_ptr<Tile> t = Bag::back();
+    return t;
 }
 
 const bool Rack::addTile(std::shared_ptr<Tile> tile) {
@@ -241,7 +242,6 @@ void Rack::refill(Bag &bag) {
     for(int i = 0; i < max_size_ - start_size; i++){
         if(!addTile(bag.removeTile()))
             return;
-        bag.pop_back();
     }
 }
 
@@ -268,4 +268,9 @@ const bool Model::placeTile(std::shared_ptr<Tile> tile, int row, int col) {
     std::shared_ptr<Space> spot = board_.getSpaceAt(row, col);
     spot->insert_Tile(tile);
     return true;
+}
+
+const bool Model::checkGameOver() const{
+    Bag bag;
+    return(bag.removeTile() == nullptr && Model::racks_.at(currentPlayer) == NULL);
 }
