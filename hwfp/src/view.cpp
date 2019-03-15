@@ -9,7 +9,8 @@ View::View(Model& model)
     background(initial_window_dimensions(), {255, 253, 208, 255}),
     rack(rack_dims_, {121, 45, 6}),
     rack_offset_({0, initial_window_dimensions().height - (2 * margin_ + tile_side_length_)}),
-    selected_tile_loc(-1)
+    selected_tile_loc(-1),
+    selected_tile_pos(ge211::Position(-1, -1))
 {
     for(char cc = 'A'; cc <= 'Z'; cc++){
         letters[cc] = ge211::Text_sprite::Builder(tile_font)
@@ -51,6 +52,7 @@ void View::draw(ge211::Sprite_set &set) {
 
     for (const std::shared_ptr<Space> &sp : model_.board_) {
         ge211::Position space_pos = board_loc_to_pos(sp->row, sp->col);
+        ge211::Position space_loc = ge211::Position(sp->row, sp->col);
         if (sp->bonus == Space::Bonuses::DoubleWord)
             set.add_sprite(dw_space, space_pos, 0);
         else if (sp->bonus == Space::Bonuses::DoubleLetter)
@@ -66,11 +68,13 @@ void View::draw(ge211::Sprite_set &set) {
         //Drawing placed tiles
         if (sp->tile != nullptr) {
             const char sp_let = sp->tile->letter;
+            if(space_loc == selected_tile_pos)
+                set.add_sprite(highlight, space_pos, 8);
             set.add_sprite(tile_sprite, space_pos.down_right_by({1, 1}), 9);
             set.add_sprite(letters[sp_let],
                     space_pos.down_right_by(letter_offset_),
                     10);
-            if (typeid(sp->tile) != typeid(BlankTile)) {
+            if (sp_let != ' ') {
                 set.add_sprite(points[sp_let],
                                space_pos.down_right_by(point_offset_),
                                10);
@@ -93,9 +97,6 @@ void View::draw(ge211::Sprite_set &set) {
             set.add_sprite(points[t_let],
                            rack_loc_pos.down_right_by(point_offset_),
                            10);
-        } else {
-            auto y = 9 + 1;
-            //yeet
         }
     }
 
@@ -114,18 +115,33 @@ ge211::Position View::rack_loc_to_pos(int ind) {
     return ge211::Position(margin_ + ind * (space_side_length_), margin_).down_right_by(rack_offset_);
 }
 
+void View::clear_selection() {
+    selected_tile_pos = {-1 , -1};
+    selected_tile_loc = -1;
+}
+
+void View::select_tile(ge211::Position pos) {
+    if(model_.board_.getTileAt(pos.y, pos.x) != nullptr) {
+        clear_selection();
+        selected_tile_pos = pos;
+    } else
+        clear_selection();
+}
+
 void View::select_tile(int i) {
-    if(i < model_.racks_.at(model_.currentPlayer)->size() && i >= 0)
+    if(i < model_.racks_.at(model_.currentPlayer)->size() && i >= 0) {
+        clear_selection();
         selected_tile_loc = i;
-    else
-        selected_tile_loc = -1;
+    } else {
+        clear_selection();
+    }
 }
 
 void View::move_tile(ge211::Position pos) {
     if(pos.x <= num_of_cols && pos.y <= num_of_rows)
         if(model_.placeTile(model_.racks_.at(model_.currentPlayer)->removeTile(selected_tile_loc),
                 pos.y, pos.x))
-            selected_tile_loc = -1;
+            clear_selection();
 
 }
 

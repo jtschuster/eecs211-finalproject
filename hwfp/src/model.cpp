@@ -220,6 +220,7 @@ void Bag::randomize() {
 std::shared_ptr<Tile> Bag::removeTile() {
     if(empty()) return nullptr;
     std::shared_ptr<Tile> t = Bag::back();
+    pop_back();
     return t;
 }
 

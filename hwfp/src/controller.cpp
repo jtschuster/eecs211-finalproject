@@ -27,7 +27,7 @@ std::string Controller::initial_window_title() const
 
 void Controller::on_key_down(ge211::Key key) {
 
-    if(key.code() == 'enter')
+    if(key.code() == '\n')
         model_.placeTile(std::make_shared<Tile>(key.code() - 32), 3, 3);
 }
 
@@ -41,6 +41,9 @@ void Controller::on_mouse_down(ge211::Mouse_button, ge211::Position pos) {
             view_.select_tile(mouse_to_rack(pos));
     else if(view_.selected_tile_loc >= 0)
         view_.move_tile(mouse_to_board(pos));
+    else {
+        view_.select_tile(mouse_to_board(pos));
+    }
 
 }
 

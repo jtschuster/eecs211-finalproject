@@ -21,6 +21,7 @@ public:
     std::string initial_window_title() const;
 
     void select_tile(int);
+    void select_tile(ge211::Position);
     void move_tile(ge211::Position);
 
 private:
@@ -41,6 +42,9 @@ private:
     const ge211::Dimensions rack_offset_;
     ge211::Rectangle_sprite rack;
     int selected_tile_loc;
+    ge211::Position selected_tile_pos;
+
+    void clear_selection();
 
     ge211::Rectangle_sprite plain_space {space_dims_, {234, 219, 179}};
     ge211::Rectangle_sprite dw_space {space_dims_, {246, 179, 176}};
