@@ -25,9 +25,10 @@ protected:
     ge211::Dimensions initial_window_dimensions() const override;
     std::string initial_window_title() const override;
 
+    void on_start() override;
+
     void on_key_down(ge211::Key) override;
 
-    int selected_tile;
     void on_mouse_down(ge211::Mouse_button, ge211::Position) override;
     const int mouse_to_rack(ge211::Position);
     const ge211::Position mouse_to_board(ge211::Position);

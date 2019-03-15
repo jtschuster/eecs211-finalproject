@@ -74,8 +74,6 @@ void View::draw(ge211::Sprite_set &set) {
                 set.add_sprite(points[sp_let],
                                space_pos.down_right_by(point_offset_),
                                10);
-            } else {
-                //yeet
             }
         }
     }
@@ -117,7 +115,7 @@ ge211::Position View::rack_loc_to_pos(int ind) {
 }
 
 void View::select_tile(int i) {
-    if(i < model_.racks_.at(model_.currentPlayer)->size())
+    if(i < model_.racks_.at(model_.currentPlayer)->size() && i >= 0)
         selected_tile_loc = i;
     else
         selected_tile_loc = -1;
