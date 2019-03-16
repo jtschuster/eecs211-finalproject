@@ -135,7 +135,7 @@ private:
 
 };
 
-struct Word : std::vector<Space> {
+struct Word : std::vector<std::shared_ptr<Space>> {
 
     // Score with active multipliers
     int Score;
@@ -153,6 +153,9 @@ public:
     // Checks if a word is in the dictionary
     const bool isValid(Dictionary&) const;
 
+// Helper function
+//converts shared_ptr<Space> to a string
+    std::string wordconvert() const;
 
 };
 
