@@ -42,7 +42,6 @@ Each subsequent player must add to the existing word(s) on the board in order to
   13. Draw board
   14. Draw all tiles
   15. End turn & change player
-  16. Success, failure, and victory noise
 
 ## Open questions
 

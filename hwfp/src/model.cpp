@@ -284,9 +284,27 @@ Model::Model(int numPlayers,
           bag(Bag()),
           currentPlayer(currentPlayer)
 {
+              initialize(numPlayers);
+//    bag.randomize();
+//    racks_[Player::P1] = std::make_shared<Rack>(Rack(Player::P1));
+//    racks_[Player::P1]->refill(bag);
+}
+
+Player Model::num_to_Player(int l) {
+    return num_to_player_map[l % 4];
+}
+
+Player Model::next_Player(Player p){
+    return num_to_Player((player_to_num_map.at(p) + 1) % numPlayers);
+}
+
+void Model::initialize(const int numPlayers) {
     bag.randomize();
-    racks_[Player::P1] = std::make_shared<Rack>(Rack(Player::P1));
-    racks_[Player::P1]->refill(bag);
+    for(int i = 0; i < numPlayers; i++){
+        Player this_player = num_to_Player(i);
+        racks_[this_player] =  std::make_shared<Rack>(this_player);
+        racks_[this_player]->refill(bag);
+    }
 }
 
 const bool Model::placeTile(std::shared_ptr<Tile> tile, int row, int col) {
@@ -303,10 +321,15 @@ void Model::endTurn() {
             sp->used = true;
         }
         racks_.at(currentPlayer)->refill(bag);
+        currentPlayer = next_Player(currentPlayer);
 //    }
+
+    if(checkGameOver()){
+
+    }
 }
 
 const bool Model::checkGameOver() const{
     Bag bag;
-    return(bag.removeTile() == nullptr && Model::racks_.at(currentPlayer) == NULL);
+    return(bag.removeTile() == nullptr && Model::racks_.at(currentPlayer) == nullptr);
 }

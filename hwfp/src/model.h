@@ -150,7 +150,7 @@ public:
     Word& operator=(const Word&) = delete;
 
 
-// Checks if a word is in the dictionary
+    // Checks if a word is in the dictionary
     const bool isValid(Dictionary&) const;
 
 
@@ -183,7 +183,7 @@ private:
 
 public:
 
-    Rack(const Player player);
+    explicit Rack(const Player player);
 
     // The owner of the rack
     const Player player;
@@ -202,10 +202,6 @@ public:
 
     // Puts a tile on the rack, returns false if no room
     const bool addTile(std::shared_ptr<Tile> tile);
-
-
-    // Given a Player identifier, get the Rack belonging to that player
-    static Rack& getPlayerRack(Player p);
 
     // Checks if the tiles on this rack are same tiles as passed rack
     const bool operator==(Rack&);
@@ -254,6 +250,12 @@ class Model {
 
     std::unordered_map<Player, std::shared_ptr<Rack>> racks_;
 
+    std::unordered_map<Player, int> const player_to_num_map =
+            {{Player::P1, 0}, {Player::P2, 1}, {Player::P3, 2}, {Player::P4, 3}};
+
+    std::vector<Player> const num_to_player_map =
+            {Player::P1, Player::P2, Player::P3, Player::P4};
+
 public:
 
     // Number of Players
@@ -293,7 +295,12 @@ public:
     // Checks if a move is valid
     const bool isMoveValid() const;
 
-
     // Gets the score of a move
     int scoreMove();
+
+    // Converts a num to a player
+    Player num_to_Player(int);
+
+    // given a player, gets the next one
+    Player next_Player(Player);
 };
