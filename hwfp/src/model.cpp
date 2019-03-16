@@ -308,5 +308,16 @@ void Model::endTurn() {
 
 const bool Model::checkGameOver() const{
     Bag bag;
-    return(bag.removeTile() == nullptr && Model::racks_.at(currentPlayer) == NULL);
+    return(bag.removeTile() == nullptr && Model::racks_.at(currentPlayer) == nullptr);
+}
+
+const bool Word::isValid(Dictionary& dictionary) const {
+    return (dictionary.binarySearch(wordconvert()));
+}
+
+std::string Word::wordconvert() const {
+    std::string word;
+    for (auto s : *this) {
+    word += s->tile->letter;
+    }
 }
