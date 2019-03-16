@@ -160,7 +160,7 @@ Board::Board(const int numRows,
                     if(r != numRows/2 || c != numCols/2)
                         push_back(std::make_shared<Space>(r,c));
                     else
-                        push_back(std::shared_ptr<Space>(centerSpace.get()));
+                        push_back(centerSpace);
                 }
             }
 
@@ -247,7 +247,7 @@ Bag::Bag()
 }
 
 void Bag::randomize() {
-    std::linear_congruential_engine<unsigned int, 3144, 97814, 1438829> rng;
+    std::linear_congruential_engine<unsigned int, 3144, 97814, 148829> rng;
     rng.seed((unsigned int)std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() % 71053);
     for(size_t i = 0; i < size(); i++){
         std::iter_swap(begin() + i, begin() + (rng() % size()));
@@ -305,10 +305,11 @@ Model::Model(int numPlayers,
           bag(Bag()),
           currentPlayer(currentPlayer)
 {
+              if(numPlayers > 4)
+                  numPlayers = 4;
+              if(numPlayers < 2)
+                  numPlayers = 2;
               initialize(numPlayers);
-//    bag.randomize();
-//    racks_[Player::P1] = std::make_shared<Rack>(Rack(Player::P1));
-//    racks_[Player::P1]->refill(bag);
 }
 
 Player Model::num_to_Player(int l) {
@@ -379,7 +380,7 @@ std::string Word::word_convert() const {
     }
     return word;
 }
-}
+
 
 const bool Rack::operator==(Rack & R1) {
     if (size() == R1.size()) {
@@ -400,5 +401,7 @@ const bool Rack::exactMatch(Rack & R1, Rack & R2) {
                 return false;
         }
         return true;
+    } else {
+        return false;
     }
 }

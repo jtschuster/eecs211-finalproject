@@ -103,6 +103,9 @@ void View::draw(ge211::Sprite_set &set) {
         }
     }
 
+    // Current Player Indicator
+    //set.add_sprite()
+
 }
 
 std::string View::initial_window_title() const {
