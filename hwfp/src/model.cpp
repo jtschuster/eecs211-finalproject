@@ -321,3 +321,25 @@ std::string Word::wordconvert() const {
     word += s->tile->letter;
     }
 }
+
+const bool Rack::operator==(Rack & R1) {
+    if (size() == R1.size()) {
+        for (auto s : *this) {
+            for (size_t j = 0; j < size(); ++j) {
+                if (s->letter != R1[j]->letter)
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+const bool Rack::exactMatch(Rack & R1, Rack & R2) {
+    if (R1.size() == R2.size()) {
+        for (size_t i = 0; i < R1.size(); ++i) {
+            if (R1[i]->letter != R2[i]->letter)
+                return false;
+        }
+        return true;
+    }
+}
