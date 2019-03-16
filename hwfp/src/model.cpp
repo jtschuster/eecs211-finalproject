@@ -166,6 +166,31 @@ std::shared_ptr<Tile> Board::getTileAt(int row, int col) const {
     return getSpaceAt(row,col)->tile;
 }
 
+std::vector<std::shared_ptr<Space>> Board::unsavedSpaces() {
+    std::vector<std::shared_ptr<Space>> res;
+    for(auto sp : *this){
+        if(!sp->used && sp->tile != nullptr)
+            res.push_back(sp);
+    }
+
+    return res;
+}
+
+std::shared_ptr<Tile> Board::remove_tile(int row, int col) {
+    std::shared_ptr<Tile> res = getTileAt(row, col);
+    getSpaceAt(row, col)->tile = nullptr;
+    return res;
+}
+
+const bool Board::insert_tile(int row, int col, std::shared_ptr<Tile> tile) {
+    return getSpaceAt(row, col)->insert_Tile(tile);
+}
+
+void Board::swap_tiles(ge211::Position loc1, ge211::Position loc2) {
+    auto temp = remove_tile(loc1.y, loc1.x);
+    insert_tile(loc1.y, loc1.x, remove_tile(loc2.y, loc2.x));
+    insert_tile(loc2.y, loc2.x, temp);
+}
 
 Bag::Bag()
 : let_quants(std::map<char, int>()) {
@@ -269,6 +294,16 @@ const bool Model::placeTile(std::shared_ptr<Tile> tile, int row, int col) {
     std::shared_ptr<Space> spot = board_.getSpaceAt(row, col);
     spot->insert_Tile(tile);
     return true;
+}
+
+void Model::endTurn() {
+//    if(isMoveValid()){
+//        Scores[currentPlayer] += scoreMove();
+        for(auto sp : board_.unsavedSpaces()) {
+            sp->used = true;
+        }
+        racks_.at(currentPlayer)->refill(bag);
+//    }
 }
 
 const bool Model::checkGameOver() const{

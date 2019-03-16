@@ -25,7 +25,7 @@ bool vector_contains(std::vector<T>, T);
 
 struct Tile {
     // letter on a tile
-    const char letter;
+    char letter;
 
     const int t_value;
 
@@ -236,7 +236,12 @@ struct Board : std::vector<std::shared_ptr<Space>> {
     std::shared_ptr<Tile> getTileAt(int row, int col) const;
 
     // Gets the tiles on the board but not yet played
-    std::vector<Space&> unsavedSpaces();
+    std::vector<std::shared_ptr<Space>> unsavedSpaces();
+
+    void swap_tiles(ge211::Position loc1, ge211::Position loc2);
+
+    std::shared_ptr<Tile> remove_tile(int row, int col);
+    const bool insert_tile(int row, int col, std::shared_ptr<Tile> tile);
 
 };
 
@@ -274,7 +279,7 @@ public:
     void initialize(int numPlayers);
 
     // Ends the current turn
-    Player endTurn();
+    void endTurn();
 
 //private: Will make private once we can access from test
     // HELPER FUNCTIONS

@@ -23,6 +23,10 @@ public:
     void select_tile(int);
     void select_tile(ge211::Position);
     void move_tile(ge211::Position);
+    void move_tile(int);
+
+    void designate_blank(ge211::Position bpos);
+    void choose_blank(char let);
 
 private:
     Model& model_;
@@ -34,6 +38,7 @@ private:
     const ge211::Dimensions letter_offset_ = {4, -2};
     const ge211::Dimensions point_offset_ = {19, 18};
     const ge211::Dimensions space_dims_ = {space_side_length_,space_side_length_};
+    const ge211::Dimensions board_dims_;
 
     ge211::Rectangle_sprite background;
 
@@ -46,6 +51,9 @@ private:
 
     void clear_selection();
 
+    bool awaiting_letter = false;
+    ge211::Position blank_pos = {-1,-1};
+
     ge211::Rectangle_sprite plain_space {space_dims_, {234, 219, 179}};
     ge211::Rectangle_sprite dw_space {space_dims_, {246, 179, 176}};
     ge211::Rectangle_sprite tw_space {space_dims_, {232, 58, 48}};
@@ -56,6 +64,7 @@ private:
     ge211::Image_sprite center_star {"star.png"};
     ge211::Rectangle_sprite tile_sprite {{tile_side_length_, tile_side_length_}, {255, 255, 240}};
     ge211::Rectangle_sprite highlight {{tile_side_length_ + 2, tile_side_length_ + 2}, {255, 198, 26}};
+    ge211::Rectangle_sprite blank_pick {space_dims_, {66, 240, 66, 128}};
 
     std::unordered_map<char, ge211::Text_sprite> letters;
     std::unordered_map<char, ge211::Text_sprite> points;
