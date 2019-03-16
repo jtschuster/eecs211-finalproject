@@ -379,7 +379,7 @@ std::string Word::word_convert() const {
     }
     return word;
 }
-}
+
 
 const bool Rack::operator==(Rack & R1) {
     if (size() == R1.size()) {
@@ -401,4 +401,15 @@ const bool Rack::exactMatch(Rack & R1, Rack & R2) {
         }
         return true;
     }
+}
+
+const bool Model::isMoveValid() const {
+
+}
+
+const bool Model::findWords() const {
+    Board board(int numRows, int numCols);
+    
+
+
 }

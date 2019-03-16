@@ -306,4 +306,8 @@ public:
 
     // given a player, gets the next one
     Player next_Player(Player);
+
+    //checks to see if each tile placed forms a validword
+    const bool findWords() const;
+
 };
