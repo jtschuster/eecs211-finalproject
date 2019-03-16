@@ -77,9 +77,21 @@ Tile::Tile(const char letter, const int val)
     t_value(val == -1 ? value(letter) : 0) {}
 
 void Word::sumScore() {
-    for(Space& s : *this){
-        Score += s.tile->getValue();
+    Score = 0;
+    int word_mult = 1;
+    for(auto s : *this){
+        int let_mult = 1;
+        if(s->bonus == Space::Bonuses::DoubleLetter)
+            let_mult = 2;
+        else if(s->bonus == Space::Bonuses::TripleLetter)
+            let_mult = 3;
+        else if(s->bonus == Space::Bonuses::DoubleWord)
+            word_mult *= 2;
+        else if(s->bonus == Space::Bonuses::TripleWord)
+            word_mult *= 3;
+        Score += let_mult * s->tile->getValue();
     }
+    Score *= word_mult;
 }
 
 
@@ -238,7 +250,7 @@ void Bag::randomize() {
     std::linear_congruential_engine<unsigned int, 3144, 97814, 1438829> rng;
     rng.seed((unsigned int)std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() % 71053);
     for(size_t i = 0; i < size(); i++){
-        std::iter_swap(begin() + i, begin() + (rng() % 102));
+        std::iter_swap(begin() + i, begin() + (rng() % size()));
     }
 }
 
@@ -263,6 +275,14 @@ std::shared_ptr<Tile> Rack::removeTile(int loc) {
     return tile;
 }
 
+void Rack::shuffle() {
+    std::linear_congruential_engine<unsigned int, 4843, 103984, 273829> rng;
+    rng.seed((unsigned int)std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() % 34688);
+    for(size_t i = 0; i < size(); i++){
+        std::iter_swap(begin() + i, begin() + (rng() % size()));
+    }
+}
+
 void Rack::refill(Bag &bag) {
     int start_size = (int)size();
     for(int i = 0; i < max_size_ - start_size; i++){
@@ -270,6 +290,7 @@ void Rack::refill(Bag &bag) {
             return;
     }
 }
+
 
 Rack::Rack(const Player player)
     : player(player) { }
@@ -307,6 +328,10 @@ void Model::initialize(const int numPlayers) {
     }
 }
 
+void Model::shuffle_current_rack() {
+    racks_[currentPlayer]->shuffle();
+}
+
 const bool Model::placeTile(std::shared_ptr<Tile> tile, int row, int col) {
     if(row > num_of_rows || col > num_of_cols) return false;
     std::shared_ptr<Space> spot = board_.getSpaceAt(row, col);
@@ -315,6 +340,15 @@ const bool Model::placeTile(std::shared_ptr<Tile> tile, int row, int col) {
 }
 
 void Model::endTurn() {
+    //Construct all the Words
+    Word onlyword;
+    for(auto s : board_.unsavedSpaces()){
+        onlyword.push_back(s);
+    }
+
+    onlyword.sumScore();
+
+
 //    if(isMoveValid()){
 //        Scores[currentPlayer] += scoreMove();
         for(auto sp : board_.unsavedSpaces()) {
@@ -335,12 +369,13 @@ const bool Model::checkGameOver() const{
 }
 
 const bool Word::isValid(Dictionary& dictionary) const {
-    return (dictionary.binarySearch(wordconvert()));
+    return (dictionary.binarySearch(word_convert()));
 }
 
-std::string Word::wordconvert() const {
+std::string Word::word_convert() const {
     std::string word;
     for (auto s : *this) {
-    word += s->tile->letter;
+        word += s->tile->letter;
     }
+    return word;
 }

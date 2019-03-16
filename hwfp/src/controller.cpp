@@ -35,6 +35,9 @@ void Controller::on_key_down(ge211::Key key) {
     } else {
         if (key.code() == '\n' || key.code() == '\r')
             model_.endTurn();
+
+        if (key.code() == 's')
+            model_.shuffle_current_rack();
     }
 }
 

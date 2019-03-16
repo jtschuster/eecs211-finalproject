@@ -140,10 +140,7 @@ struct Word : std::vector<std::shared_ptr<Space>> {
     // Score with active multipliers
     int Score;
 
-private:
     void sumScore();
-
-public:
 
     Word();
 
@@ -155,7 +152,7 @@ public:
 
 // Helper function
 //converts shared_ptr<Space> to a string
-    std::string wordconvert() const;
+    std::string word_convert() const;
 
 };
 
@@ -186,7 +183,7 @@ private:
 
 public:
 
-    explicit Rack(const Player player);
+    explicit Rack(Player player);
 
     // The owner of the rack
     const Player player;
@@ -282,6 +279,9 @@ public:
 
     // Sets up the players racks and the game
     void initialize(int numPlayers);
+
+    // Public access to shuffle rack
+    void shuffle_current_rack();
 
     // Ends the current turn
     void endTurn();
