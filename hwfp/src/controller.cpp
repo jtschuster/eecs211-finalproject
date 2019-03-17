@@ -51,7 +51,7 @@ void Controller::on_key_down(ge211::Key key) {
 // TODO: Add or remove if necessary
 
 void Controller::on_mouse_down(ge211::Mouse_button, ge211::Position pos) {
-    if(!view_.awaiting_letter && pos.x < view_.board_dims_.width) {
+    if(!view_.game_over && !view_.awaiting_letter && pos.x < view_.board_dims_.width) {
 
         if (pos.y >= view_.rack_offset_.height) // Clicked on rack
             if (view_.selected_tile_pos != ge211::Position(-1, -1)) // selected tile on board

@@ -248,6 +248,10 @@ class Model {
     std::unordered_map<Player, int> const player_to_num_map =
             {{Player::P1, 0}, {Player::P2, 1}, {Player::P3, 2}, {Player::P4, 3}};
 
+    std::unordered_map<Player, std::string> const player_to_text_map =
+            {{Player::P1, "Player 1"}, {Player::P2, "Player 2"},
+             {Player::P3, "Player 2"}, {Player::P4, "Player 4"}};
+
     std::vector<Player> const num_to_player_map =
             {Player::P1, Player::P2, Player::P3, Player::P4};
 
@@ -300,7 +304,7 @@ public:
     const bool checkGameOver() const;
 
     // Sums up scores at the end of the game
-    const std::map<Player, int> finalScore();
+    Player getWinner() const;
 
     // Checks if a move is valid
     const bool isMoveValid() const;

@@ -114,8 +114,15 @@ void View::draw(ge211::Sprite_set &set) {
 
 
     //Game Over
-    if(game_over || model_.checkGameOver()){
-
+    if(game_over){
+        set.add_sprite(game_over_box, endgame_offset_, 20);
+        set.add_sprite(game_over_text1, endgame_offset_.down_right_by(space_dims_), 21);
+        set.add_sprite(game_over_text2, endgame_offset_.down_right_by(space_dims_).down_by(20), 21);
+        winner_text = ge211::Text_sprite::Builder(poppins_font_big)
+                .color(ge211::Color::white())
+                .message(model_.player_to_text_map.at(model_.getWinner()))
+                .build();
+        set.add_sprite(winner_text, endgame_offset_.down_right_by(space_dims_).down_by(50).right_by(10), 21);
     }
 
 }
