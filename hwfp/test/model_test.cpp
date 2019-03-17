@@ -1,5 +1,6 @@
 #include "model.h"
 #include <catch.h>
+#include "view.h"
 
 TEST_CASE("example test")
 {
@@ -68,7 +69,16 @@ TEST_CASE("Multi word score")
     Word multi = model.findWord(2, 2, model.Vertical);
     multi.sumScore();
     CHECK(multi.Score == 14);
+    model.endTurn();
 
+    model.placeTile(std::make_shared<Tile>(h),2,1);
+    model.placeTile(std::make_shared<Tile>(i),3,1);
+    model.placeTile(std::make_shared<Tile>(m),4,1);
+    CHECK(model.isMoveValid());
+    Word multi2 = model.findWord(2, 2, model.Vertical);
+    multi2.sumScore();
+    CHECK(multi.Score == 14);
+    model.endTurn();
 }
 
 TEST_CASE("Shuffle tiles")
@@ -105,4 +115,38 @@ TEST_CASE("Checking Validity of Move")
     model.placeTile(std::make_shared<Tile>(y),10,2);
 
     CHECK(model.isMoveValid());
+}
+// testing to make sure that a tile can be placed on the edges of the board
+TEST_CASE("Checking actual edges")
+{
+    Bag bag;
+    Model model(2);
+    Tile e('E');
+    Tile d('D');
+    Tile g('G');
+
+    model.placeTile(std::make_shared<Tile>(e),0,1);
+    model.placeTile(std::make_shared<Tile>(d),0,2);
+    model.placeTile(std::make_shared<Tile>(g),0,3);
+    model.placeTile(std::make_shared<Tile>(e),0,4);
+
+    CHECK(model.isMoveValid());
+}
+
+TEST_CASE("Exchange tiles")
+{
+    // the tiles on the rack can be shuffled within themselves
+
+    Rack rack1(P1);
+    Bag bag;
+    bag.empty();
+    rack1.refill(bag);
+    Tile h('H');
+    Tile r('R');
+    bag.push_back(std::make_shared<Tile>(h));
+    bag.push_back(std::make_shared<Tile>(r));
+
+    CHECK_FALSE(rack1.exchange(bag, new std::vector<Tile> {rack1[0], rack1[1], rack1[2]}));  // Fails since not enough tiles left in bag to exchange
+    CHECK(rack1.exchange(bag, new std::vector<Tile> {rack1[0]})); // Works since 1 < 2
+
 }
