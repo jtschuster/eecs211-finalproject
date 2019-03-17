@@ -1,4 +1,4 @@
-# [FINAL TODO: GAME TITLE]
+# Words without Friends
 
 ## Instructions
 
@@ -21,5 +21,4 @@ and we already had 14 other functional elements to implement.
 
 ## Answers to open questions
 
-[FINAL TODO]
 
