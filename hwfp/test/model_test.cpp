@@ -33,23 +33,16 @@ TEST_CASE("Point Calculator") {
     rack.addTile(std::make_shared<Tile>(d1));
 
 
-    board.getSpaceAt(8, 8)->insert_Tile(std::make_shared<Tile>(A));
-    board.getSpaceAt(8, 9)->insert_Tile(std::make_shared<Tile>(d1));
-    board.getSpaceAt(8, 10)->insert_Tile(std::make_shared<Tile>(d2));
+    model.placeTile(std::make_shared<Tile>(A),8,8);
+    model.placeTile(std::make_shared<Tile>(d1),8,9);
+    model.placeTile(std::make_shared<Tile>(d2),8,10);
+    Word add = model.findWord(8, 8, model.Horizontal);
+    add.sumScore();
 
-    CHECK(model.scoreMove() == 5);
+    CHECK(add.Score == 6);
 }
-    /*
-    board.erase();
 
-    board.getSpaceAt(8,8).insert_Tile(a);
-    board.getSpaceAt(8,9).insert_Tile(d1);
-    board.getSpaceAt(8,10).insert_Tile(d2);
-    board.getSpaceAt(8,8).bonus = Space::Bonuses::DoubleWord;
-    CHECK(model.scoreMove() == 10);
-    board.erase();
 
-}
 
 TEST_CASE("Multi word score")
 {
@@ -61,21 +54,23 @@ TEST_CASE("Multi word score")
 
     Model model(1);
     Board board(15, 15);
-    Tile h('h');
-    Tile i('i');
-    Tile k('k');
-    Tile m('m');
-    Tile n('n');
+    Tile h('H');
+    Tile i('I');
+    Tile k('K');
+    Tile m('M');
+    Tile n('N');
 
-    board.getSpaceAt(2,2)->insert_Tile(i);
-    board.getSpaceAt(3,2).insert_Tile(n);
-    board.getSpaceAt(3,1).insert_Tile(i);
-    board.getSpaceAt(4,1).insert_Tile(m);
-    board.getSpaceAt(2,1).insert_Tile(h);
-    board.getSpaceAt(1,2).insert_Tile(k);
+    model.placeTile(std::make_shared<Tile>(h),2,2);
+    model.placeTile(std::make_shared<Tile>(n),3,2);
+    model.placeTile(std::make_shared<Tile>(i),3,1);
+    model.placeTile(std::make_shared<Tile>(m),4,1);
+    model.placeTile(std::make_shared<Tile>(h),2,1);
+    model.placeTile(std::make_shared<Tile>(k),1,2);
 
     CHECK(model.isMoveValid());
-    CHECK(model.scoreMove() == 10);
+    Word multi = model.findWord(2, 2, model.Vertical);
+    multi.sumScore();
+    CHECK(multi.Score == 10);
     board.erase();
 
 }
@@ -113,4 +108,7 @@ TEST_CASE("Exchange tiles")
 }
 
 TEST_CASE("")
+{
+
+}
  */
