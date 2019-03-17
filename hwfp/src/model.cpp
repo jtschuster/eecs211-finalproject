@@ -249,7 +249,7 @@ Bag::Bag()
             push_back(std::make_shared<Tile>(c));
         }
     }
-    for(int i = 0; i < 4; i++){
+    for(int i = 0; i < 2; i++){
         push_back(std::make_shared<BlankTile>());
     }
 }
@@ -396,7 +396,24 @@ void Model::endTurn() {
 
 const bool Model::checkGameOver() const{
     Bag bag;
-    return(bag.removeTile() == nullptr && Model::racks_.at(currentPlayer) == nullptr);
+    for(auto i : racks_){
+        if (i.second->empty()) return true;
+    }
+    auto t = bag.removeTile();
+    if(t == nullptr) return true;
+    else {
+        bag.push_back(t);
+        return false;
+    }
+}
+
+Player Model::getWinner() const {
+    Player best = Player::P1;
+    for(auto p : Scores){
+        if(p.second > Scores.at(best))
+            best = p.first;
+    }
+    return best;
 }
 
 const bool Word::isValid(Dictionary& dictionary) const {
@@ -555,6 +572,7 @@ int Model::scoreMove(std::vector<Word> &words) {
     for(auto &w : words){
         sum += w.Score;
     }
+    if(racks_[currentPlayer]->size() == 0) sum += 50; // Scrabble Bonus
     return sum;
 }
 

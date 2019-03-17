@@ -133,20 +133,20 @@ TEST_CASE("Checking actual edges")
     CHECK(model.isMoveValid());
 }
 
-TEST_CASE("Exchange tiles")
-{
-    // the tiles on the rack can be shuffled within themselves
-
-    Rack rack1(P1);
-    Bag bag;
-    bag.empty();
-    rack1.refill(bag);
-    Tile h('H');
-    Tile r('R');
-    bag.push_back(std::make_shared<Tile>(h));
-    bag.push_back(std::make_shared<Tile>(r));
-
-    CHECK_FALSE(rack1.exchange(bag, new std::vector<Tile> {rack1[0], rack1[1], rack1[2]}));  // Fails since not enough tiles left in bag to exchange
-    CHECK(rack1.exchange(bag, new std::vector<Tile> {rack1[0]})); // Works since 1 < 2
-
-}
+//TEST_CASE("Exchange tiles")
+//{
+//    // the tiles on the rack can be shuffled within themselves
+//
+//    Rack rack1(P1);
+//    Bag bag;
+//    bag.empty();
+//    rack1.refill(bag);
+//    Tile h('H');
+//    Tile r('R');
+//    bag.push_back(std::make_shared<Tile>(h));
+//    bag.push_back(std::make_shared<Tile>(r));
+//
+//    CHECK_FALSE(rack1.exchange(bag, tnew std::vector<Tile> {rack1[0], rack1[1], rack1[2]}));  // Fails since not enough tiles left in bag to exchange
+//    CHECK(rack1.exchange(bag, new std::vector<Tile> {rack1[0]})); // Works since 1 < 2
+//
+//}
