@@ -29,7 +29,7 @@ public:
     void choose_blank(char let);
 
     void end_game();
-    const bool game_over = false;
+    bool game_over = false;
 
 private:
     Model& model_;
