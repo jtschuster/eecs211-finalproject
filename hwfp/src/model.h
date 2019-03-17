@@ -239,6 +239,10 @@ class Model {
 
     Board board_;
 
+    Dictionary dict_;
+
+    bool firstMove = true;
+
     std::unordered_map<Player, std::shared_ptr<Rack>> racks_;
 
     std::unordered_map<Player, int> const player_to_num_map =
@@ -324,7 +328,5 @@ public:
     // given a player, gets the next one
     Player next_Player(Player);
 
-    //checks to see if each tile placed forms a validword
-    const bool findWords() const;
 
 };

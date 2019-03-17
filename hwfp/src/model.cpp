@@ -364,9 +364,7 @@ void Model::endTurn() {
         currentPlayer = next_Player(currentPlayer);
     }
 
-    if(checkGameOver()){
-
-    }
+    firstMove = false;
 }
 
 const bool Model::checkGameOver() const{
@@ -412,12 +410,25 @@ const bool Rack::exactMatch(Rack & R1, Rack & R2) {
 }
 
 const bool Model::isMoveValid() const {
-    if(!checkAdjacent()) return false;
+    if (!checkAdjacent() && !firstMove) return false;
 
     Orient orientate = getOrientation();
-    if(orientate == Orient::Invalid) return false;
+    if (orientate == Orient::Invalid) return false;
 
+    auto temp_dict = Dictionary();
 
+    if (!findWord(findFirst()->row, findFirst()->col, orientate).isValid(temp_dict)) return false;
+    for (auto sp : board_.unsavedSpaces()) {
+        if (orientate == Orient::Horizontal) {
+            auto wd = findWord(sp->row, sp->col, Orient::Vertical);
+            if (!wd.isValid(temp_dict) && wd.size() != 1) return false;
+        } else {
+            auto wd = findWord(sp->row, sp->col, Orient::Horizontal);
+            if (!wd.isValid(temp_dict) && wd.size() != 1) return false;
+        }
+    }
+
+    return true;
 }
 
 const Model::Orient Model::getOrientation() const {
@@ -440,10 +451,6 @@ const Model::Orient Model::getOrientation() const {
             }
         }
     }
-
-    if((guess == Orient::Vertical && findLast()->row - origin.x != board_.unsavedSpaces().size() - 1 ) ||
-        (guess == Orient::Horizontal && findLast()->col - origin.y != board_.unsavedSpaces().size() - 1 ))
-        return Orient::Invalid;
 
     return guess;
 }
@@ -510,13 +517,6 @@ int Model::scoreMove(std::vector<std::shared_ptr<Word>> words) {
         sum += w->Score;
     }
     return sum;
-}
-
-const bool Model::findWords() const {
-    Board board(int numRows, int numCols);
-    
-
-
 }
 
 

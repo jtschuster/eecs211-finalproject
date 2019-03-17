@@ -40,7 +40,7 @@ void Controller::on_key_down(ge211::Key key) {
             model_.shuffle_current_rack();
 
         if (key.code() == 'f') {
-            auto i = model_.getOrientation();
+            auto i = model_.isMoveValid();
             int y = 7 + 9;
         }
     }
