@@ -334,6 +334,7 @@ void Model::initialize(const int numPlayers) {
         Player this_player = num_to_Player(i);
         racks_[this_player] = std::make_shared<Rack>(this_player);
         racks_[this_player]->refill(bag);
+        Scores[this_player] = 0;
     }
 }
 
@@ -443,9 +444,18 @@ const bool Model::isMoveValid() const {
     Orient orientate = getOrientation();
     if (orientate == Orient::Invalid) return false;
 
+    if (firstMove &&
+        !vector_contains<std::shared_ptr<Space>>(board_.unsavedSpaces(),board_.centerSpace))
+        return false;
+    if(firstMove &&
+        ((orientate == Orient::Horizontal && findLast()->col - findFirst()->col != board_.unsavedSpaces().size() - 1) ||
+        (orientate == Orient::Vertical && findLast()->row - findFirst()->row != board_.unsavedSpaces().size() - 1)))
+            return false;
+
     auto temp_dict = Dictionary();
 
-    if (!findWord(findFirst()->row, findFirst()->col, orientate).isValid(temp_dict)) return false;
+    if (orientate != Orient::Single &&
+        !findWord(findFirst()->row, findFirst()->col, orientate).isValid(temp_dict)) return false;
     for (auto sp : board_.unsavedSpaces()) {
         if (orientate == Orient::Horizontal) {
             auto wd = findWord(sp->row, sp->col, Orient::Vertical);
@@ -496,6 +506,7 @@ const bool Model::checkAdjacent() const {
 const std::shared_ptr<Space> Model::findFirst() const {
     auto sps = board_.unsavedSpaces();
     std::shared_ptr<Space> best = sps[1];
+    if(sps.size() == 1) return best;
     for(auto sp : sps){
         if(sp->row <= best->row && sp->col <= best->col)
             best = sp;
@@ -506,6 +517,7 @@ const std::shared_ptr<Space> Model::findFirst() const {
 const std::shared_ptr<Space> Model::findLast() const {
     auto sps = board_.unsavedSpaces();
     std::shared_ptr<Space> best = sps[1];
+    if(sps.size() == 1) return best;
     for(auto sp : sps){
         if(sp->row >= best->row && sp->col >= best->col)
             best = sp;

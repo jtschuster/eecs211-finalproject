@@ -28,6 +28,9 @@ public:
     void designate_blank(ge211::Position bpos);
     void choose_blank(char let);
 
+    void end_game();
+    const bool game_over = false;
+
 private:
     Model& model_;
 
@@ -39,6 +42,7 @@ private:
     const ge211::Dimensions point_offset_ = {19, 18};
     const ge211::Dimensions space_dims_ = {space_side_length_,space_side_length_};
     const ge211::Dimensions board_dims_;
+    const ge211::Dimensions endgame_offset_ = 5 * space_dims_;
 
     ge211::Rectangle_sprite background;
 
@@ -50,6 +54,10 @@ private:
     ge211::Position selected_tile_pos;
 
     void clear_selection();
+
+    ge211::Font tile_font {"RobotoMono-Regular.ttf", 26};
+    ge211::Font point_font {"RobotoMono-Regular.ttf", 12};
+    ge211::Font poppins_font {"Poppins-Regular.ttf", 18};
 
     bool awaiting_letter = false;
     ge211::Position blank_pos = {-1,-1};
@@ -66,10 +74,19 @@ private:
     ge211::Rectangle_sprite highlight {{tile_side_length_ + 2, tile_side_length_ + 2}, {255, 198, 26}};
     ge211::Rectangle_sprite blank_pick {space_dims_, {66, 240, 66, 128}};
 
+    ge211::Text_sprite player_info;
+    ge211::Rectangle_sprite game_over_box {{5 * (space_side_length_ + margin_),
+                                            5 * (space_side_length_ + margin_)},
+                                           {191, 128, 255}};
+    ge211::Text_sprite game_over_text = ge211::Text_sprite::Builder(poppins_font)
+            .color(ge211::Color::black())
+            .message("Game over!\nYour score is")
+            .build();
+
     std::unordered_map<char, ge211::Text_sprite> letters;
     std::unordered_map<char, ge211::Text_sprite> points;
-    ge211::Font tile_font {"RobotoMono-Regular.ttf", 26};
-    ge211::Font point_font {"RobotoMono-Regular.ttf", 12};
+
+
 
     ge211::Position board_loc_to_pos(int row, int col);
 

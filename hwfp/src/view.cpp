@@ -103,8 +103,20 @@ void View::draw(ge211::Sprite_set &set) {
         }
     }
 
-    // Current Player Indicator
-    //set.add_sprite()
+    player_info = ge211::Text_sprite::Builder(poppins_font)
+            .add_message("Player ")
+            .add_message(model_.player_to_num_map.at(model_.currentPlayer) + 1)
+            .add_message(" - Score: ")
+            .add_message(model_.Scores.at(model_.currentPlayer))
+            .color({230, 230, 230})
+            .build();
+    set.add_sprite(player_info, ge211::Position{space_side_length_ * 8, 5}.down_right_by(rack_offset_), 10);
+
+
+    //Game Over
+    if(game_over || model_.checkGameOver()){
+
+    }
 
 }
 
@@ -190,5 +202,9 @@ void View::choose_blank(char let) {
     awaiting_letter = false;
     model_.board_.getTileAt(blank_pos.y, blank_pos.x)->letter = let;
     blank_pos = {-1, -1};
+}
+
+void View::end_game() {
+    game_over = true;
 }
 

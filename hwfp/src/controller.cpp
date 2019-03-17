@@ -33,17 +33,18 @@ void Controller::on_key_down(ge211::Key key) {
         if(key.code() >= 'a' && key.code() <= 'z')
             view_.choose_blank(key.code() - 32);
     } else {
-        if (key.code() == '\n' || key.code() == '\r')
+        if (key.code() == '\n' || key.code() == '\r') {
             model_.endTurn();
+            if(model_.checkGameOver())
+                view_.end_game();
+        }
 
         if (key.code() == 's')
             model_.shuffle_current_rack();
 
+        if (key.code() == 'q')
+            view_.end_game();
 
-        if (key.code() == 'f') {
-            auto i = model_.isMoveValid();
-            int y = 7 + 9;
-        }
     }
 }
 
@@ -83,5 +84,6 @@ const ge211::Position Controller::mouse_to_board(ge211::Position pos) {
 void Controller::on_start() {
     background_color = {153, 0, 0};
 }
+
 
 

@@ -30,7 +30,7 @@ Each subsequent player must add to the existing word(s) on the board in order to
 
   1. ~~ Scores a word (with bonuses) ~~
   3. ~~ Checks if a word is valid ~~
-  4. Checks if a move is valid
+  4. ~~ Checks if a move is valid ~~
   5. ~~ Refill the rack tiles ~~
   6. ~~ Shuffle rack ~~
   7. Exchange tiles
