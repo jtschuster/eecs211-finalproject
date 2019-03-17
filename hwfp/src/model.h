@@ -50,13 +50,7 @@ struct BlankTile : Tile {
 struct Dictionary : std::vector<std::string> {
 
     /// Constructor
-    //Dictionary(std::string);
-private:
-
-    // Length of the dictionary
-    const int length_;
-
-public:
+    Dictionary();
 
 
     // Checks if a string is in the dictionary
