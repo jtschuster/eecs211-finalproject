@@ -329,7 +329,7 @@ void Model::initialize(const int numPlayers) {
     bag.randomize();
     for(int i = 0; i < numPlayers; i++){
         Player this_player = num_to_Player(i);
-        racks_[this_player] =  std::make_shared<Rack>(this_player);
+        racks_[this_player] = std::make_shared<Rack>(this_player);
         racks_[this_player]->refill(bag);
     }
 }
@@ -347,24 +347,47 @@ const bool Model::placeTile(std::shared_ptr<Tile> tile, int row, int col) {
 
 void Model::endTurn() {
     //Construct all the Words
-    Word onlyword;
-    for(auto s : board_.unsavedSpaces()){
-        onlyword.push_back(s);
-    }
-
-    onlyword.sumScore();
 
 
     if(isMoveValid()){
-        //Scores[currentPlayer] += scoreMove();
+        std::vector<std::shared_ptr<Word>> move_words;
+        auto orientate = getOrientation();
+        if(orientate != Orient::Single) {
+            auto mn = findWord(findFirst()->row, findFirst()->col, orientate);
+            mn.sumScore();
+            move_words.push_back(std::shared_ptr<Word>(&mn));
+        }
+        for (auto sp : board_.unsavedSpaces()) {
+            if (orientate != Orient::Vertical) {
+                auto wd = findWord(sp->row, sp->col, Orient::Vertical);
+                if (wd.size() > 1) {
+                    wd.sumScore();
+                    move_words.push_back(std::shared_ptr<Word>(&wd));
+                }
+            }
+            if (orientate != Orient::Horizontal) {
+                auto wd = findWord(sp->row, sp->col, Orient::Horizontal);
+                if (wd.size() > 1) {
+                    wd.sumScore();
+                    move_words.push_back(std::shared_ptr<Word>(&wd));
+                }
+            }
+
+        }
+
+
+
+        Scores[currentPlayer] += scoreMove(move_words);
         for(auto sp : board_.unsavedSpaces()) {
             sp->used = true;
         }
         racks_.at(currentPlayer)->refill(bag);
         currentPlayer = next_Player(currentPlayer);
+
+        firstMove = false;
     }
 
-    firstMove = false;
+
 }
 
 const bool Model::checkGameOver() const{
@@ -409,7 +432,9 @@ const bool Rack::exactMatch(Rack & R1, Rack & R2) {
     }
 }
 
+
 const bool Model::isMoveValid() const {
+
     if (!checkAdjacent() && !firstMove) return false;
 
     Orient orientate = getOrientation();

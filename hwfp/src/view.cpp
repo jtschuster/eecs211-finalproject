@@ -192,6 +192,3 @@ void View::choose_blank(char let) {
     blank_pos = {-1, -1};
 }
 
-const bool Model::exchange(Bag &bag, std::vector<Tile> tiles) {
-
-}
