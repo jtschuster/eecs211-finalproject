@@ -191,3 +191,7 @@ void View::choose_blank(char let) {
     model_.board_.getTileAt(blank_pos.y, blank_pos.x)->letter = let;
     blank_pos = {-1, -1};
 }
+
+const bool Model::exchange(Bag &bag, std::vector<Tile> tiles) {
+
+}

@@ -109,3 +109,5 @@ TEST_CASE("Exchange tiles")
     CHECK(rack1.exchange(bag, new std::vector<Tile> {rack1[0]})); // Works since 1 < 2
 
 }
+
+TEST_CASE("")

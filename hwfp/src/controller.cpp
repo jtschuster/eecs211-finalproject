@@ -38,6 +38,8 @@ void Controller::on_key_down(ge211::Key key) {
 
         if (key.code() == 's')
             model_.shuffle_current_rack();
+        if (key.code() == 'e')
+            model_.exchange(;
     }
 }
 
