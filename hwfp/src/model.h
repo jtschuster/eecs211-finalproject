@@ -194,9 +194,6 @@ public:
     // Refill the Rack from the Bag
     void refill(Bag& bag);
 
-    // Exchanges tiles with the Bag, returns false if not enough tiles remaining
-    const bool exchange(Bag& bag, std::vector<Tile>);
-
     // Take the tile off the rack (presumably onto board)
     std::shared_ptr<Tile> removeTile(int loc);
 
@@ -293,6 +290,9 @@ public:
 
     // Ends the current turn
     void endTurn();
+
+    // Exchanges tiles with the Bag, returns false if not enough tiles remaining
+    const bool exchange(Bag& bag, std::vector<Tile>);
 
 //private: Will make private once we can access from test
     // HELPER FUNCTIONS
