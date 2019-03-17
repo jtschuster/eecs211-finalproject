@@ -172,6 +172,7 @@ Board::Board(const int numRows,
         }
 
 std::shared_ptr<Space> Board::getSpaceAt(int row, int col) const {
+    if(row > 14 || col > 14 || row < 0 || col < 0) return nullptr;
     for(std::shared_ptr<Space> s : *this)
         if(s->row == row && s->col == col)
             return s;
@@ -180,7 +181,9 @@ std::shared_ptr<Space> Board::getSpaceAt(int row, int col) const {
 }
 
 std::shared_ptr<Tile> Board::getTileAt(int row, int col) const {
-    return getSpaceAt(row,col)->tile;
+    auto sp_at_loc = getSpaceAt(row, col);
+    if(!sp_at_loc) return nullptr;
+    return sp_at_loc->tile;
 }
 
 std::vector<std::shared_ptr<Space>> Board::unsavedSpaces() const{
@@ -350,26 +353,26 @@ void Model::endTurn() {
 
 
     if(isMoveValid()){
-        std::vector<std::shared_ptr<Word>> move_words;
+        std::vector<Word> move_words;
         auto orientate = getOrientation();
         if(orientate != Orient::Single) {
             auto mn = findWord(findFirst()->row, findFirst()->col, orientate);
             mn.sumScore();
-            move_words.push_back(std::shared_ptr<Word>(&mn));
+            move_words.push_back(mn);
         }
         for (auto sp : board_.unsavedSpaces()) {
             if (orientate != Orient::Vertical) {
                 auto wd = findWord(sp->row, sp->col, Orient::Vertical);
                 if (wd.size() > 1) {
                     wd.sumScore();
-                    move_words.push_back(std::shared_ptr<Word>(&wd));
+                    move_words.push_back(wd);
                 }
             }
             if (orientate != Orient::Horizontal) {
                 auto wd = findWord(sp->row, sp->col, Orient::Horizontal);
                 if (wd.size() > 1) {
                     wd.sumScore();
-                    move_words.push_back(std::shared_ptr<Word>(&wd));
+                    move_words.push_back(wd);
                 }
             }
 
@@ -482,11 +485,10 @@ const Model::Orient Model::getOrientation() const {
 
 const bool Model::checkAdjacent() const {
     for(auto sp : board_.unsavedSpaces()){
-        if(board_.getSpaceAt(sp->row - 1, sp->col)->used ||
-            board_.getSpaceAt(sp->row + 1, sp->col)->used ||
-            board_.getSpaceAt(sp->row, sp->col - 1)->used ||
-            board_.getSpaceAt(sp->row, sp->col + 1)->used)
-            return true;
+        if(sp->row > 0 && board_.getSpaceAt(sp->row - 1, sp->col)->used) return true;
+        if(sp->row < 14 && board_.getSpaceAt(sp->row + 1, sp->col)->used) return true;
+        if(sp->col > 0 && board_.getSpaceAt(sp->row, sp->col - 1)->used) return true;
+        if(sp->col < 14 && board_.getSpaceAt(sp->row, sp->col + 1)->used) return true;
     }
     return false;
 }
@@ -536,10 +538,10 @@ Word Model::findWord(int row, int col, Model::Orient dir) const {
     return res;
 }
 
-int Model::scoreMove(std::vector<std::shared_ptr<Word>> words) {
+int Model::scoreMove(std::vector<Word> &words) {
     int sum = 0;
-    for(auto w : words){
-        sum += w->Score;
+    for(auto &w : words){
+        sum += w.Score;
     }
     return sum;
 }

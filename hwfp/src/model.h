@@ -321,7 +321,7 @@ public:
     Word findWord(int row, int col, Orient dir) const;
 
     // Gets the score of a move
-    int scoreMove(std::vector<std::shared_ptr<Word>>);
+    int scoreMove(std::vector<Word>&);
 
     // Converts a num to a player
     Player num_to_Player(int);
