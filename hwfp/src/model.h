@@ -232,7 +232,7 @@ struct Board : std::vector<std::shared_ptr<Space>> {
     std::shared_ptr<Tile> getTileAt(int row, int col) const;
 
     // Gets the tiles on the board but not yet played
-    std::vector<std::shared_ptr<Space>> unsavedSpaces();
+    std::vector<std::shared_ptr<Space>> unsavedSpaces() const;
 
     void swap_tiles(ge211::Position loc1, ge211::Position loc2);
 
@@ -244,7 +244,7 @@ struct Board : std::vector<std::shared_ptr<Space>> {
 
 class Model {
 
-    friend class View;
+    friend class View; friend class Controller;
 
     Board board_;
 
@@ -255,6 +255,14 @@ class Model {
 
     std::vector<Player> const num_to_player_map =
             {Player::P1, Player::P2, Player::P3, Player::P4};
+
+
+    enum Orient {
+        Horizontal,
+        Vertical,
+        Single,
+        Invalid
+    };
 
 public:
 
@@ -298,8 +306,23 @@ public:
     // Checks if a move is valid
     const bool isMoveValid() const;
 
+    // Gets if the played tiles are vertical, horizontal, a single tile, or invalid
+    const Orient getOrientation() const;
+
+    // Makes sure that the tiles are next to the already played tiles
+    const bool checkAdjacent() const;
+
+    // Finds the upperleftmost space in unsaved words
+    const std::shared_ptr<Space> findFirst() const;
+
+    // Finds the bottomrightmost space in unsaved words
+    const std::shared_ptr<Space> findLast() const;
+
+    // given a location, return the word in dir that that location is part of
+    Word findWord(int row, int col, Orient dir) const;
+
     // Gets the score of a move
-    int scoreMove();
+    int scoreMove(std::vector<std::shared_ptr<Word>>);
 
     // Converts a num to a player
     Player num_to_Player(int);

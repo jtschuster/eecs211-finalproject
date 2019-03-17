@@ -178,7 +178,7 @@ std::shared_ptr<Tile> Board::getTileAt(int row, int col) const {
     return getSpaceAt(row,col)->tile;
 }
 
-std::vector<std::shared_ptr<Space>> Board::unsavedSpaces() {
+std::vector<std::shared_ptr<Space>> Board::unsavedSpaces() const{
     std::vector<std::shared_ptr<Space>> res;
     for(auto sp : *this){
         if(!sp->used && sp->tile != nullptr)
@@ -350,14 +350,14 @@ void Model::endTurn() {
     onlyword.sumScore();
 
 
-//    if(isMoveValid()){
-//        Scores[currentPlayer] += scoreMove();
+    if(isMoveValid()){
+        //Scores[currentPlayer] += scoreMove();
         for(auto sp : board_.unsavedSpaces()) {
             sp->used = true;
         }
         racks_.at(currentPlayer)->refill(bag);
         currentPlayer = next_Player(currentPlayer);
-//    }
+    }
 
     if(checkGameOver()){
 
@@ -407,7 +407,104 @@ const bool Rack::exactMatch(Rack & R1, Rack & R2) {
 }
 
 const bool Model::isMoveValid() const {
+    if(!checkAdjacent()) return false;
 
+    Orient orientate = getOrientation();
+    if(orientate == Orient::Invalid) return false;
+
+
+}
+
+const Model::Orient Model::getOrientation() const {
+    Orient guess = Orient::Invalid;
+    if(board_.unsavedSpaces().size() == 1)
+        return Orient::Single;
+    ge211::Position origin {findFirst()->row,
+                            findFirst()->col};
+    for(auto sp : board_.unsavedSpaces()){
+        if(!(sp->row == origin.x && sp->col == origin.y)) {
+            if (guess == Orient::Invalid) {
+                if(sp->row == origin.x)
+                    guess = Orient::Horizontal;
+                else if(sp->col == origin.y)
+                    guess = Orient::Vertical;
+            }
+            else if ((sp->row == origin.x && guess == Orient::Vertical) ||
+                    (sp->col == origin.y && guess == Orient::Horizontal)) {
+                return Orient::Invalid;
+            }
+        }
+    }
+
+    if((guess == Orient::Vertical && findLast()->row - origin.x != board_.unsavedSpaces().size() - 1 ) ||
+        (guess == Orient::Horizontal && findLast()->col - origin.y != board_.unsavedSpaces().size() - 1 ))
+        return Orient::Invalid;
+
+    return guess;
+}
+
+const bool Model::checkAdjacent() const {
+    for(auto sp : board_.unsavedSpaces()){
+        if(board_.getSpaceAt(sp->row - 1, sp->col)->used ||
+            board_.getSpaceAt(sp->row + 1, sp->col)->used ||
+            board_.getSpaceAt(sp->row, sp->col - 1)->used ||
+            board_.getSpaceAt(sp->row, sp->col + 1)->used)
+            return true;
+    }
+    return false;
+}
+
+const std::shared_ptr<Space> Model::findFirst() const {
+    auto sps = board_.unsavedSpaces();
+    std::shared_ptr<Space> best = sps[1];
+    for(auto sp : sps){
+        if(sp->row <= best->row && sp->col <= best->col)
+            best = sp;
+    }
+    return best;
+}
+
+const std::shared_ptr<Space> Model::findLast() const {
+    auto sps = board_.unsavedSpaces();
+    std::shared_ptr<Space> best = sps[1];
+    for(auto sp : sps){
+        if(sp->row >= best->row && sp->col >= best->col)
+            best = sp;
+    }
+    return best;
+}
+
+Word Model::findWord(int row, int col, Model::Orient dir) const {
+    Word res;
+    if(board_.getTileAt(row, col) != nullptr) {
+        if(dir == Orient::Horizontal) {
+            while (board_.getTileAt(row, col) != nullptr) {
+                col--;
+            }
+            col++;
+            while(board_.getTileAt(row, col) != nullptr) {
+                res.push_back(board_.getSpaceAt(row, col++));
+            }
+        } else if (dir == Orient::Vertical) {
+            while (board_.getTileAt(row, col) != nullptr) {
+                row--;
+            }
+            row++;
+            while(board_.getTileAt(row, col) != nullptr) {
+                res.push_back(board_.getSpaceAt(row++, col));
+            }
+        }
+    }
+
+    return res;
+}
+
+int Model::scoreMove(std::vector<std::shared_ptr<Word>> words) {
+    int sum = 0;
+    for(auto w : words){
+        sum += w->Score;
+    }
+    return sum;
 }
 
 const bool Model::findWords() const {
