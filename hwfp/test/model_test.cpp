@@ -52,7 +52,7 @@ TEST_CASE("Multi word score")
     //                                       M
     // if the word him is added to the pre-existing word kin then the score must contain the words hi and in
 
-    Model model(1);
+    Model model(2);
     Board board(15, 15);
     Tile h('H');
     Tile i('I');
@@ -60,18 +60,14 @@ TEST_CASE("Multi word score")
     Tile m('M');
     Tile n('N');
 
-    model.placeTile(std::make_shared<Tile>(h),2,2);
+    model.placeTile(std::make_shared<Tile>(i),2,2);
     model.placeTile(std::make_shared<Tile>(n),3,2);
-    model.placeTile(std::make_shared<Tile>(i),3,1);
-    model.placeTile(std::make_shared<Tile>(m),4,1);
-    model.placeTile(std::make_shared<Tile>(h),2,1);
     model.placeTile(std::make_shared<Tile>(k),1,2);
 
     CHECK(model.isMoveValid());
     Word multi = model.findWord(2, 2, model.Vertical);
     multi.sumScore();
-    CHECK(multi.Score == 10);
-    board.erase();
+    CHECK(multi.Score == 14);
 
 }
 
@@ -79,36 +75,34 @@ TEST_CASE("Shuffle tiles")
 {
     // the tiles on the rack can be shuffled within themselves
 
-    Rack rack1;
+    Rack rack1(P1);
     Bag bag;
-    Tile tile;
+    Tile h('H');
     rack1.refill(bag);
     Rack rack2 = rack1;
     rack1.shuffle();
     CHECK_FALSE(Rack::exactMatch(rack1, rack2));
-    CHECK_FALSE(rack1.addTile(tile)); // Make sure rack won't allow overfilling
+    CHECK_FALSE(rack1.addTile(std::make_shared<Tile>(h))); // Make sure rack won't allow overfilling
 
 }
 
-TEST_CASE("Exchange tiles")
-{
-    // the tiles on the rack can be shuffled within themselves
 
-    Rack rack1;
+
+TEST_CASE("Checking Validity of Move")
+{
     Bag bag;
-    bag.empty();
-    rack1.refill(bag);
+    Model model(2);
+    Tile h('H');
+    Tile e('E');
+    Tile y('Y');
 
-    bag.push_back(new Tile('e'));
-    bag.push_back(new Tile('r'));
+    model.placeTile(std::make_shared<Tile>(h),1,2);
+    model.placeTile(std::make_shared<Tile>(e),2,2);
+    model.placeTile(std::make_shared<Tile>(y),3,2);
 
-    CHECK_FALSE(rack1.exchange(bag, new std::vector<Tile> {rack1[0], rack1[1], rack1[2]}));  // Fails since not enough tiles left in bag to exchange
-    CHECK(rack1.exchange(bag, new std::vector<Tile> {rack1[0]})); // Works since 1 < 2
+    model.placeTile(std::make_shared<Tile>(h),10,2);
+    model.placeTile(std::make_shared<Tile>(e),10,2);
+    model.placeTile(std::make_shared<Tile>(y),10,2);
 
+    CHECK(model.isMoveValid());
 }
-
-TEST_CASE("")
-{
-
-}
- */
