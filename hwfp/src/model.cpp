@@ -17,18 +17,23 @@ bool vector_contains(std::vector<T> vec, T val) {
     return false;
 }
 
+Dictionary::Dictionary() :
+    dictionary()
+{}
+
 const bool Dictionary::binarySearch(std::string word) {
 
-    std::ifstream file("words.txt");
+    std::ifstream file;
+    file.open("../Resources/words.txt");
     if (file.is_open()) {
-        std::vector <std::string> dictionary;
-
         for(size_t i = 0; i < 276643; ++i) {
-            file >> dictionary[i];
+            std::string s;
+            file >> s;
+            dictionary.push_back(s);
         }
     }
 
-    return (std::binary_search(dictionary.begin(), dictionary.end(), word));
+    return std::binary_search(dictionary.begin(), dictionary.end(), word);
 
 }
 
