@@ -32,7 +32,7 @@ const bool Dictionary::binarySearch(std::string word) {
             dictionary.push_back(s);
         }
     }
-
+    file.close();
     return std::binary_search(dictionary.begin(), dictionary.end(), word);
 
 }

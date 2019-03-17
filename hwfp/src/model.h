@@ -252,15 +252,16 @@ class Model {
             {Player::P1, Player::P2, Player::P3, Player::P4};
 
 
+
+
+public:
+
     enum Orient {
         Horizontal,
         Vertical,
         Single,
         Invalid
     };
-
-public:
-
     // Number of Players
     int numPlayers;
 
