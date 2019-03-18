@@ -1,14 +1,37 @@
+#include <iostream>
 #include "controller.h"
 
 using namespace ge211;
 
 
 
-Controller::Controller()
+Controller::Controller(int cmdarg)
         : model_(2)
         , view_(model_)
         , m_pos_(0,0)
-{ }
+{ switch(cmdarg){
+    case 1:  // Allows for seeing blank functions
+        model_.racks_[model_.currentPlayer]->removeTile(0);
+        model_.racks_[model_.currentPlayer]->removeTile(1);
+        model_.racks_[model_.currentPlayer]->addTile(std::make_shared<BlankTile>());
+        model_.racks_[model_.currentPlayer]->addTile(std::make_shared<BlankTile>());
+        break;
+
+    case 2:
+        model_.racks_[model_.currentPlayer]->clear();
+        model_.racks_[model_.currentPlayer]->addTile(std::make_shared<Tile>('P'));
+        model_.racks_[model_.currentPlayer]->addTile(std::make_shared<Tile>('I'));
+        model_.racks_[model_.currentPlayer]->addTile(std::make_shared<Tile>('N'));
+        model_.racks_[model_.currentPlayer]->addTile(std::make_shared<Tile>('B'));
+        model_.racks_[model_.currentPlayer]->addTile(std::make_shared<Tile>('A'));
+        model_.racks_[model_.currentPlayer]->addTile(std::make_shared<Tile>('L'));
+        model_.racks_[model_.currentPlayer]->addTile(std::make_shared<Tile>('L'));
+        break;
+
+    default:
+        break;
+    }
+}
 
 void Controller::draw(Sprite_set& sprites)
 {
@@ -34,9 +57,15 @@ void Controller::on_key_down(ge211::Key key) {
             view_.choose_blank(key.code() - 32);
     } else {
         if (key.code() == '\n' || key.code() == '\r') {
-            model_.endTurn();
-            if(model_.checkGameOver())
-                view_.end_game();
+            if(model_.endTurn()) {
+                auto pnum =
+                        (model_.player_to_num_map.at(model_.currentPlayer) - 1 + model_.numPlayers) % model_.numPlayers;
+                Player lastP = model_.num_to_Player(pnum);
+                std::cout << "Last move by " << model_.player_to_text_map.at(lastP) << " scored ";
+                std::cout << model_.lastMoveScore << " points" << std::endl;
+                if (model_.checkGameOver())
+                    view_.end_game();
+            }
         }
 
         if (key.code() == 's')

@@ -269,6 +269,9 @@ public:
     // Number of Players
     int numPlayers;
 
+    //Last move val
+    int lastMoveScore;
+
     // Stores each player's score
     std::unordered_map<Player, int> Scores;
 
@@ -292,7 +295,7 @@ public:
     void shuffle_current_rack();
 
     // Ends the current turn
-    void endTurn();
+    bool endTurn();
 
     // Exchanges tiles with the Bag, returns false if not enough tiles remaining
     const bool exchange(Bag& bag, std::vector<Tile>);

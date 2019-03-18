@@ -351,9 +351,14 @@ const bool Model::placeTile(std::shared_ptr<Tile> tile, int row, int col) {
     return true;
 }
 
-void Model::endTurn() {
+bool Model::endTurn() {
     //Construct all the Words
 
+    if(board_.unsavedSpaces().empty()){
+        currentPlayer = next_Player(currentPlayer);
+        lastMoveScore = 0;
+        return true;
+    }
 
     if(isMoveValid()){
         std::vector<Word> move_words;
@@ -382,8 +387,8 @@ void Model::endTurn() {
         }
 
 
-
-        Scores[currentPlayer] += scoreMove(move_words);
+        lastMoveScore = scoreMove(move_words);
+        Scores[currentPlayer] += lastMoveScore;
         for(auto sp : board_.unsavedSpaces()) {
             sp->used = true;
         }
@@ -391,8 +396,10 @@ void Model::endTurn() {
         currentPlayer = next_Player(currentPlayer);
 
         firstMove = false;
+        return true;
     }
 
+    return false;
 
 }
 

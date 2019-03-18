@@ -6,7 +6,7 @@
 class Controller : public ge211::Abstract_game
 {
 public:
-    explicit Controller();
+    explicit Controller(int cmdarg = 0);
 
 
 // `protected` means that GE211 (via base class `ge211::Abstract_game`)
