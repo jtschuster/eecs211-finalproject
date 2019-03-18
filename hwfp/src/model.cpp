@@ -86,14 +86,16 @@ void Word::sumScore() {
     int word_mult = 1;
     for(auto s : *this){
         int let_mult = 1;
-        if(s->bonus == Space::Bonuses::DoubleLetter)
-            let_mult = 2;
-        else if(s->bonus == Space::Bonuses::TripleLetter)
-            let_mult = 3;
-        else if(s->bonus == Space::Bonuses::DoubleWord)
-            word_mult *= 2;
-        else if(s->bonus == Space::Bonuses::TripleWord)
-            word_mult *= 3;
+        if(!s->used) {
+            if (s->bonus == Space::Bonuses::DoubleLetter)
+                let_mult = 2;
+            else if (s->bonus == Space::Bonuses::TripleLetter)
+                let_mult = 3;
+            else if (s->bonus == Space::Bonuses::DoubleWord)
+                word_mult *= 2;
+            else if (s->bonus == Space::Bonuses::TripleWord)
+                word_mult *= 3;
+        }
         Score += let_mult * s->tile->getValue();
     }
     Score *= word_mult;

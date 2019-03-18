@@ -61,23 +61,35 @@ TEST_CASE("Multi word score")
     Tile m('M');
     Tile n('N');
 
-    model.placeTile(std::make_shared<Tile>(i),2,2);
-    model.placeTile(std::make_shared<Tile>(n),3,2);
-    model.placeTile(std::make_shared<Tile>(k),1,2);
+    model.placeTile(std::make_shared<Tile>(i),7,7);
+    model.placeTile(std::make_shared<Tile>(n),8,7);
+    model.placeTile(std::make_shared<Tile>(k),6,7);
 
     CHECK(model.isMoveValid());
-    Word multi = model.findWord(2, 2, model.Vertical);
+    Word multi = model.findWord(7, 7, model.Vertical);
     multi.sumScore();
     CHECK(multi.Score == 14);
     model.endTurn();
 
-    model.placeTile(std::make_shared<Tile>(h),2,1);
-    model.placeTile(std::make_shared<Tile>(i),3,1);
-    model.placeTile(std::make_shared<Tile>(m),4,1);
+    model.placeTile(std::make_shared<Tile>(h),7,6);
+    model.placeTile(std::make_shared<Tile>(i),8,6);
+    model.placeTile(std::make_shared<Tile>(m),9,6);
     CHECK(model.isMoveValid());
-    Word multi2 = model.findWord(2, 2, model.Vertical);
-    multi2.sumScore();
-    CHECK(multi.Score == 14);
+
+    Word multi3 = model.findWord(7, 6, model.Vertical);
+    multi3.sumScore();
+    CHECK(multi3.Score == 9);
+
+    Word multi4 = model.findWord(7, 6, model.Horizontal);
+    multi4.sumScore();
+    CHECK(multi4.Score == 5);
+
+    Word multi5 = model.findWord(9, 6, model.Vertical);
+    multi5.sumScore();
+    CHECK(multi5.Score == 9);
+
+    CHECK(multi5 == multi3);
+
     model.endTurn();
 }
 
@@ -106,31 +118,71 @@ TEST_CASE("Checking Validity of Move")
     Tile e('E');
     Tile y('Y');
 
-    model.placeTile(std::make_shared<Tile>(h),1,2);
-    model.placeTile(std::make_shared<Tile>(e),2,2);
-    model.placeTile(std::make_shared<Tile>(y),3,2);
+    model.placeTile(std::make_shared<Tile>(h),7,7);
+    model.placeTile(std::make_shared<Tile>(e),8,7);
+    model.placeTile(std::make_shared<Tile>(y),9,7);
 
-    model.placeTile(std::make_shared<Tile>(h),10,2);
-    model.placeTile(std::make_shared<Tile>(e),10,2);
-    model.placeTile(std::make_shared<Tile>(y),10,2);
 
     CHECK(model.isMoveValid());
 }
+
+TEST_CASE("Check bad word")
+{
+    Bag bag;
+    Model model(2);
+    Tile p('P');
+    Tile l('L');
+    Tile o('O');
+    Tile w('W');
+
+    model.placeTile(std::make_shared<Tile>(p),5,7);
+    model.placeTile(std::make_shared<Tile>(o),6,7);
+    model.placeTile(std::make_shared<Tile>(l),7,7);
+    model.placeTile(std::make_shared<Tile>(w),8,7);
+
+    CHECK_FALSE(model.isMoveValid());
+
+}
+
+TEST_CASE("Check bad move")
+{
+    Bag bag;
+    Model model(2);
+    Tile p('P');
+    Tile l('L');
+    Tile o('O');
+    Tile w('W');
+
+    model.placeTile(std::make_shared<Tile>(p),5,7);
+    model.placeTile(std::make_shared<Tile>(o),6,7);
+    model.placeTile(std::make_shared<Tile>(l),7,7);
+    model.placeTile(std::make_shared<Tile>(0),7,8);
+
+    CHECK_FALSE(model.isMoveValid());
+
+}
+
+
 // testing to make sure that a tile can be placed on the edges of the board
 TEST_CASE("Checking actual edges")
 {
     Bag bag;
     Model model(2);
-    Tile e('E');
-    Tile d('D');
-    Tile g('G');
 
-    model.placeTile(std::make_shared<Tile>(e),0,1);
-    model.placeTile(std::make_shared<Tile>(d),0,2);
-    model.placeTile(std::make_shared<Tile>(g),0,3);
-    model.placeTile(std::make_shared<Tile>(e),0,4);
+    model.placeTile(std::make_shared<Tile>('C'),7,0);
+    model.placeTile(std::make_shared<Tile>('O'),7,1);
+    model.placeTile(std::make_shared<Tile>('M'),7,2);
+    model.placeTile(std::make_shared<Tile>('P'),7,3);
+    model.placeTile(std::make_shared<Tile>('U'),7,4);
+    model.placeTile(std::make_shared<Tile>('T'),7,5);
+    model.placeTile(std::make_shared<Tile>('E'),7,6);
+    model.placeTile(std::make_shared<Tile>('R'),7,7);
 
     CHECK(model.isMoveValid());
+
+    model.endTurn();
+
+    CHECK(model.Scores[Player::P1] == 102);
 }
 
 //TEST_CASE("Exchange tiles")
