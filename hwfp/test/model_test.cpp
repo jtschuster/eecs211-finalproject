@@ -151,12 +151,11 @@ TEST_CASE("Check bad move")
     Tile p('P');
     Tile l('L');
     Tile o('O');
-    Tile w('W');
 
     model.placeTile(std::make_shared<Tile>(p),5,7);
     model.placeTile(std::make_shared<Tile>(o),6,7);
     model.placeTile(std::make_shared<Tile>(l),7,7);
-    model.placeTile(std::make_shared<Tile>(0),7,8);
+    model.placeTile(std::make_shared<Tile>(o),7,8);
 
     CHECK_FALSE(model.isMoveValid());
 
