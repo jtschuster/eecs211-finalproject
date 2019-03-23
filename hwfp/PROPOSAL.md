@@ -28,20 +28,20 @@ Each subsequent player must add to the existing word(s) on the board in order to
 
 ## Functional requirements
 
-  1. ~~ Scores a word (with bonuses) ~~
-  3. ~~ Checks if a word is valid ~~
-  4. ~~ Checks if a move is valid ~~
-  5. ~~ Refill the rack tiles ~~
-  6. ~~ Shuffle rack ~~
+  1.  Scores a word (with bonuses) 
+  3.  Checks if a word is valid 
+  4.  Checks if a move is valid 
+  5.  Refill the rack tiles 
+  6.  Shuffle rack 
   7. Exchange tiles
-  8. ~~ Start game ~~
-  9.  ~~ Check for end of game ~~
+  8.  Start game 
+  9.   Check for end of game 
   10. Score end of game 
-  11. ~~ Place tile on board ~~
-  12. ~~ Configure blank tiles ~~
-  13. ~~ Draw board ~~
-  14. ~~ Draw all tiles ~~
-  15. ~~ End turn & change player ~~
+  11.  Place tile on board 
+  12.  Configure blank tiles 
+  13.  Draw board 
+  14.  Draw all tiles 
+  15.  End turn & change player 
 
 ## Open questions
 
